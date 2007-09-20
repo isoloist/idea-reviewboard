@@ -344,7 +344,7 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/reviewboard-idea.iml" filepath="$PROJECT_DIR$/reviewboard-idea.iml" />
+      <module fileurl="file://$PROJECT_DIR$/idea-reviewboard.iml" filepath="$PROJECT_DIR$/idea-reviewboard.iml" />
     </modules>
   </component>
   <component name="ProjectRootConfigurable.UI">
