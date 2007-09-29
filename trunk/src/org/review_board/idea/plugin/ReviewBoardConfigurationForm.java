@@ -1,12 +1,14 @@
 package org.review_board.idea.plugin;
 
-import javax.swing.JTextField;
-import javax.swing.JPanel;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import org.review_board.idea.plugin.settings.ProjectSettings;
+import org.review_board.idea.plugin.settings.UserSettings;
 
 public class ReviewBoardConfigurationForm
 {
-    private JTextField m_uri;
+    private JTextField m_serverUrl;
 
     private JTextField m_username;
 
@@ -14,33 +16,47 @@ public class ReviewBoardConfigurationForm
 
     private JPanel m_rootComponent;
 
+    private UserSettings m_userSettings;
+
+    private ProjectSettings m_projectSettings;
+
+    public ReviewBoardConfigurationForm( UserSettings userSettings,
+        ProjectSettings projectSettings )
+    {
+        m_userSettings = userSettings;
+        m_projectSettings = projectSettings;
+    }
+
     public JComponent getRootComponent()
     {
         return m_rootComponent;
     }
 
-    public void setData( ReviewBoardPlugin data )
+    public void setData()
     {
-        m_uri.setText( data.getUri() );
-        m_username.setText( data.getUsername() );
-        m_password.setText( data.getPassword() );
+        m_serverUrl.setText( m_projectSettings.getServerUrl() );
+        m_username.setText( m_userSettings.getUsername() );
+        m_password.setText( m_userSettings.getPassword() );
     }
 
-    public void getData( ReviewBoardPlugin data )
+    public void getData()
     {
-        data.setUri( m_uri.getText() );
-        data.setUsername( m_username.getText() );
-        data.setPassword( m_password.getText() );
+        m_projectSettings.setServerUrl( m_serverUrl.getText() );
+        m_userSettings.setUsername( m_username.getText() );
+        m_userSettings.setPassword( m_password.getText() );
     }
 
-    public boolean isModified( ReviewBoardPlugin data )
+    public boolean isModified()
     {
-        if ( m_uri.getText() != null ? !m_uri.getText().equals( data.getUri() )
-            : data.getUri() != null ) return true;
+        if ( m_serverUrl.getText() != null ? !m_serverUrl.getText()
+            .equals( m_projectSettings.getServerUrl() )
+            : m_projectSettings.getServerUrl() != null ) return true;
         if ( m_username.getText() != null ? !m_username.getText()
-            .equals( data.getUsername() ) : data.getUsername() != null ) return true;
+            .equals( m_userSettings.getUsername() )
+            : m_userSettings.getUsername() != null ) return true;
         if ( m_password.getText() != null ? !m_password.getText()
-            .equals( data.getPassword() ) : data.getPassword() != null ) return true;
+            .equals( m_userSettings.getPassword() )
+            : m_userSettings.getPassword() != null ) return true;
         return false;
     }
 }
