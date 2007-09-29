@@ -1,76 +1,55 @@
 package org.review_board.idea.plugin;
 
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.JDOMExternalizer;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.review_board.idea.plugin.settings.ProjectSettings;
+import org.review_board.idea.plugin.settings.UserSettings;
 
-public class ReviewBoardPlugin implements ProjectComponent, Configurable,
-    JDOMExternalizable
+@State(
+    name = "ReviewBoard",
+    storages = {
+    @Storage(
+        id = "other",
+        file = "$WORKSPACE_FILE$"
+    )}
+)
+public class ReviewBoardPlugin implements ProjectComponent, Configurable
 {
-    private static final String URI_ATTRIBUTE = "uri";
-    private static final String USERNAME_ATTRIBUTE = "username";
-    private static final String PASSWORD_ATTRIBUTE = "password";
-
-    private String m_uri = "";
-
-    private String m_username = "";
-
-    private String m_password = "";
-
     private ReviewBoardConfigurationForm m_form;
 
     private final Project m_project;
 
-    public ReviewBoardPlugin( final Project project )
+    private final ProjectSettings m_projectSettings;
+
+    private final UserSettings m_userSettings;
+
+    public ReviewBoardPlugin( final Project project, final UserSettings userSettings,
+        final ProjectSettings projectSettings )
     {
         m_project = project;
+        m_projectSettings = projectSettings;
+        m_userSettings = userSettings;
     }
 
-    public String getUri()
+    public static ReviewBoardPlugin getInstance( Project project )
     {
-        return m_uri;
+        return project.getComponent( ReviewBoardPlugin.class );
     }
 
-    public void setUri( final String uri )
+    public void initComponent()
     {
-        m_uri = uri;
-    }
-
-    public String getUsername()
-    {
-        return m_username;
-    }
-
-    public void setUsername( final String username )
-    {
-        m_username = username;
-    }
-
-    public String getPassword()
-    {
-        return m_password;
-    }
-
-    public void setPassword( final String password )
-    {
-        m_password = password;
-    }
-
-    public void initComponent() {
         ChangeListManager.getInstance( m_project )
             .registerCommitExecutor( new ReviewBoardCommitExecutor( m_project ) );
     }
@@ -108,27 +87,30 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable,
 
     public JComponent createComponent()
     {
-        if( m_form == null )
-            m_form = new ReviewBoardConfigurationForm();
+        if ( m_form == null )
+        {
+            m_form =
+                new ReviewBoardConfigurationForm( m_userSettings, m_projectSettings );
+        }
 
         return m_form.getRootComponent();
     }
 
     public boolean isModified()
     {
-        return m_form != null && m_form.isModified( this );
+        return m_form != null && m_form.isModified();
     }
 
     public void apply() throws ConfigurationException
     {
-        if( m_form != null )
-            m_form.getData( this );
+        if ( m_form != null )
+            m_form.getData();
     }
 
     public void reset()
     {
-        if( m_form != null )
-            m_form.setData( this );
+        if ( m_form != null )
+            m_form.setData();
     }
 
     public void disposeUIResources()
@@ -141,25 +123,8 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable,
         return this;
     }
 
-    public void loadState( final ReviewBoardPlugin object )
+    public void loadState( final ReviewBoardPlugin state )
     {
-        XmlSerializerUtil.copyBean( object, this );
-    }
-
-    public void readExternal( final Element element ) throws InvalidDataException
-    {
-        m_uri = JDOMExternalizer.readString( element, URI_ATTRIBUTE );
-        m_uri = m_uri == null ? "" : m_uri;
-        m_username = JDOMExternalizer.readString( element, USERNAME_ATTRIBUTE );
-        m_username = m_username == null ? "" : m_username;
-        m_password = JDOMExternalizer.readString( element, PASSWORD_ATTRIBUTE );
-        m_password = m_password == null ? "" : m_password;
-    }
-
-    public void writeExternal( final Element element ) throws WriteExternalException
-    {
-        JDOMExternalizer.write( element, URI_ATTRIBUTE, m_uri );
-        JDOMExternalizer.write( element, USERNAME_ATTRIBUTE, m_username );
-        JDOMExternalizer.write( element, PASSWORD_ATTRIBUTE, m_password );
+        XmlSerializerUtil.copyBean( state, this );
     }
 }

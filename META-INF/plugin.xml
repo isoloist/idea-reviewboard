@@ -12,4 +12,12 @@
             </implementation-class>
         </component>
     </project-components>
-</idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService
+            serviceInterface="org.review_board.idea.plugin.settings.ProjectSettings"
+            serviceImplementation="org.review_board.idea.plugin.settings.ProjectSettings"/>
+        <projectService
+            serviceInterface="org.review_board.idea.plugin.settings.UserSettings"
+            serviceImplementation="org.review_board.idea.plugin.settings.UserSettings"/>
+    </extensions>
+ </idea-plugin>
