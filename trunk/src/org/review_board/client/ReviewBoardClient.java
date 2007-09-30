@@ -52,10 +52,9 @@ public class ReviewBoardClient
 
     public void login() throws ReviewBoardException
     {
+        m_needsLogin = false;
         final LoginMethod login = new LoginMethod( m_uri, m_username, m_password );
         processRequest( login );
-
-        m_needsLogin = false;
     }
 
     private void processRequest( final ReviewBoardMethod method )
@@ -63,7 +62,7 @@ public class ReviewBoardClient
     {
         if( m_needsLogin )
             login();
-        
+
         try
         {
             executeMethod( method );
@@ -136,23 +135,5 @@ public class ReviewBoardClient
     public void setUri( final String uri )
     {
         m_uri = uri;
-    }
-
-    public static void main( final String[] args )
-    {
-        try
-        {
-            final ReviewBoardClient client = new ReviewBoardClient( "plumpy", "eTARded",
-                "http://localhost:8000" );
-            final Collection<Repository> repositories = client.getRepositories();
-        }
-        catch ( ReviewBoardException e )
-        {
-            e.printStackTrace();
-        }
-        catch ( JSONException e )
-        {
-            e.printStackTrace();
-        }
     }
 }
