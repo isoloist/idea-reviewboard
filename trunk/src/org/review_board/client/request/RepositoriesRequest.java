@@ -1,29 +1,34 @@
-package org.review_board.client.method;
+/*
+* @(#)RepositoriesRequest.java
+*
+* Copyright 2007 Tripwire, Inc. All Rights Reserved.
+*
+* ver 1.0 Nov 22, 2007 plumpy
+*/
+package org.review_board.client.request;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.review_board.client.ReviewBoardClient;
-import org.review_board.client.ReviewBoardException;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
+import org.review_board.client.request.ReviewBoardRequest;
+import org.review_board.client.ReviewBoardException;
+import org.review_board.client.ReviewBoardClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class RepositoriesMethod extends ReviewBoardMethod
+public class RepositoriesRequest extends ReviewBoardRequest
 {
-    public static final String REPOSITORIES_LOCATION = "repositories/";
-
-    public static final String REPOSITORIES_KEY = "repositories";
-
-    public RepositoriesMethod( final String baseUri ) throws ReviewBoardException
+    public RepositoriesRequest(final String baseUri)
     {
-        super( baseUri );
+        m_method = new GetMethod( baseUri + "repositories/" );
     }
 
     public ArrayList<Repository> getRepositories() throws ReviewBoardException
     {
         final Response response = getResponse();
-        final JSONArray array = (JSONArray)response.get( REPOSITORIES_KEY );
+        final JSONArray array = (JSONArray)response.get( "repositories" );
 
         final ArrayList<Repository> repositories = new ArrayList<Repository>();
 
@@ -41,26 +46,20 @@ public class RepositoriesMethod extends ReviewBoardMethod
 
         return repositories;
     }
-    protected String getMethodApiUrl()
-    {
-        return REPOSITORIES_LOCATION;
-    }
 
-    public static void main( final String[] args )
+    public static void main( String[] args )
     {
         try
         {
             final ReviewBoardClient client = new ReviewBoardClient( "plumpy", "foobar",
-                "http://localhost:8000" );
+                "http://localhost" );
             final Collection<Repository> repositories = client.getRepositories();
         }
         catch ( ReviewBoardException e )
         {
             e.printStackTrace();
         }
-        catch ( JSONException e )
-        {
-            e.printStackTrace();
-        }
     }
 }
+
+// eof: RepositoriesRequest.java
