@@ -377,6 +377,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
   </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="com.intellij.jsf.UserDefinedFacesConfigs">
     <option name="USER_DEFINED_CONFIGS">
       <value>
@@ -387,11 +388,11 @@
   <component name="libraryTable">
     <library name="commons-httpclient-3.1-rc1">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/commons-httpclient-3.1-rc1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/commons-httpclient-3.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file:///home/plumpy/Documents/commons-httpclient-3.1-rc1/src/java" />
+        <root url="file:///home/plumpy/Documents/idea-reviewboard/commons-httpclient-3.1/src/java" />
       </SOURCES>
     </library>
     <library name="commons-logging-1.1">
