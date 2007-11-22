@@ -3,21 +3,23 @@ package org.review_board.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.json.JSONException;
 import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
 import org.review_board.client.json.User;
-import org.review_board.client.method.GroupsMethod;
-import org.review_board.client.method.LoginMethod;
-import org.review_board.client.method.RepositoriesMethod;
-import org.review_board.client.method.ReviewBoardMethod;
-import org.review_board.client.method.UsersMethod;
+import org.review_board.client.request.GroupsRequest;
+import org.review_board.client.request.LoginRequest;
+import org.review_board.client.request.RepositoriesRequest;
+import org.review_board.client.request.RepositoryUuidRequest;
+import org.review_board.client.request.RequestFactory;
+import org.review_board.client.request.ReviewBoardRequest;
+import org.review_board.client.request.UsersRequest;
 
 public class ReviewBoardClient
 {
     private HttpClient m_httpClient;
+
+    private RequestFactory m_requestFactory;
 
     private String m_username = "";
 
@@ -28,55 +30,64 @@ public class ReviewBoardClient
     public ReviewBoardClient( final String username, final String password,
         final String uri )
     {
-        this.m_username = username;
-        this.m_password = password;
-        this.m_uri = uri;
-        this.m_httpClient = new HttpClient();
+        m_username = username;
+        m_password = password;
+        m_uri = uri;
+        m_httpClient = new HttpClient();
+        m_requestFactory = new RequestFactory( uri );
     }
 
-    public ArrayList<User> getUsers() throws ReviewBoardException, JSONException
+    public ArrayList<User> getUsers() throws ReviewBoardException
     {
-        final UsersMethod method = new UsersMethod( m_uri );
-        processRequest( method );
-        return method.getUsers();
+        final UsersRequest request = m_requestFactory.getUsersRequest();
+        processRequest( request );
+        return request.getUsers();
     }
 
-    public ArrayList<Group> getGroups() throws ReviewBoardException, JSONException
+    public ArrayList<Group> getGroups() throws ReviewBoardException
     {
-        final GroupsMethod method = new GroupsMethod( m_uri );
-        processRequest( method );
-        return method.getGroups();
+        final GroupsRequest request = m_requestFactory.getGroupsRequest();
+        processRequest( request );
+        return request.getGroups();
     }
 
-    public ArrayList<Repository> getRepositories()
-        throws ReviewBoardException, JSONException
+    public ArrayList<Repository> getRepositories() throws ReviewBoardException
     {
-        final RepositoriesMethod method = new RepositoriesMethod( m_uri );
-        processRequest( method );
-        return method.getRepositories();
+        final RepositoriesRequest request = m_requestFactory.getRepositoriesRequest();
+        processRequest( request );
+        return request.getRepositories();
+    }
+
+    public String getRepositoryUuid( final int repositoryId ) throws ReviewBoardException
+    {
+        final RepositoryUuidRequest request =
+            new RepositoryUuidRequest( m_uri, repositoryId );
+        processRequest( request );
+        return request.getRepositoryUuid();
     }
 
     public void login() throws ReviewBoardException
     {
-        final LoginMethod login = new LoginMethod( m_uri, m_username, m_password );
-        processRequest( login );
+        final LoginRequest request =
+            m_requestFactory.getLoginRequest( m_username, m_password );
+        processRequest( request );
     }
 
-    private void processRequest( final ReviewBoardMethod method )
+    private void processRequest( final ReviewBoardRequest request )
         throws ReviewBoardException
     {
         try
         {
-            executeMethod( method );
+            request.execute( m_httpClient );
 
-            final Response response = method.getResponse();
+            final Response response = request.getResponse();
 
             if ( response.isFailure() )
             {
                 if ( response.isNotLoggedInFailure() )
                 {
                     login();
-                    processRequest( method );
+                    processRequest( request );
                 }
                 else
                 {
@@ -88,18 +99,6 @@ public class ReviewBoardClient
         catch ( IOException e )
         {
             throw new ReviewBoardException( e );
-        }
-    }
-
-    private void executeMethod( final ReviewBoardMethod method )
-        throws IOException, ReviewBoardException
-    {
-        final int responseCode = m_httpClient.executeMethod( method );
-        if ( responseCode >= 300 )
-        {
-            throw new ReviewBoardException(
-                "HTTP error " + responseCode + ": " + HttpStatus
-                    .getStatusText( responseCode ) );
         }
     }
 
@@ -131,5 +130,6 @@ public class ReviewBoardClient
     public void setUri( final String uri )
     {
         m_uri = uri;
+        m_requestFactory = new RequestFactory( uri );
     }
 }

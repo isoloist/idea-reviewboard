@@ -4,6 +4,7 @@
   <description>provides integration with Review Board (www.review-board.org)</description>
   <version>0.0</version>
   <vendor>Skylab Heavy Industries</vendor>
+  <depends optional="true">Subversion</depends>
   <idea-version since-build="3000"/>
     <project-components>
         <component>

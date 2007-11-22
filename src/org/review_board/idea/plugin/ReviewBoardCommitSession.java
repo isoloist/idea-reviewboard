@@ -4,14 +4,18 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchBuilder;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
+import com.intellij.vcsUtil.VcsUtil;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.svn.SvnVcs;
+import org.tmatesoft.svn.core.wc.SVNInfo;
 
 public class ReviewBoardCommitSession implements CommitSession
 {
@@ -70,6 +74,18 @@ public class ReviewBoardCommitSession implements CommitSession
             StringWriter writer = new StringWriter( 2048 );
             UnifiedDiffWriter.write( patches, writer, "\n" );
             System.out.print( writer.toString() );
+            AbstractVcs vcs = VcsUtil.getVcsFor( m_project, m_project.getBaseDir() );
+            System.out.println( "vcs: " + vcs.getClass().getName() + " " + vcs.getDisplayName() );
+            if( vcs instanceof SvnVcs )
+            {
+                SvnVcs svn = (SvnVcs)vcs;
+                SVNInfo info = svn.getInfoWithCaching( m_project.getBaseDir() );
+                System.out.println( "URL: " + info.getURL() );
+            }
+            else
+            {
+                System.out.println( "no way jose??!" );
+            }
         }
         catch ( Exception e )
         {
