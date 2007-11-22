@@ -5,15 +5,15 @@ import org.review_board.client.ReviewBoardException;
 
 public class User extends AbstractReviewBoardObject
 {
-    public static final String ID_KEY = "id";
+    private static final String ID_KEY = "id";
 
-    public static final String USERNAME_KEY = "username";
+    private static final String USERNAME_KEY = "username";
 
-    public static final String EMAIL_KEY = "email";
+    private static final String EMAIL_KEY = "email";
 
-    public static final String FULL_NAME_KEY = "fullname";
+    private static final String FULL_NAME_KEY = "fullname";
 
-    public static final String URL_KEY = "url";
+    private static final String URL_KEY = "url";
 
     public User( final JSONObject object )
     {

@@ -2,13 +2,14 @@ package org.review_board.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.json.JSONException;
+import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
 import org.review_board.client.json.User;
+import org.review_board.client.method.GroupsMethod;
 import org.review_board.client.method.LoginMethod;
 import org.review_board.client.method.RepositoriesMethod;
 import org.review_board.client.method.ReviewBoardMethod;
@@ -23,8 +24,6 @@ public class ReviewBoardClient
     private String m_password = "";
 
     private String m_uri = "";
-
-    private boolean m_needsLogin = true;
 
     public ReviewBoardClient( final String username, final String password,
         final String uri )
@@ -42,6 +41,13 @@ public class ReviewBoardClient
         return method.getUsers();
     }
 
+    public ArrayList<Group> getGroups() throws ReviewBoardException, JSONException
+    {
+        final GroupsMethod method = new GroupsMethod( m_uri );
+        processRequest( method );
+        return method.getGroups();
+    }
+
     public ArrayList<Repository> getRepositories()
         throws ReviewBoardException, JSONException
     {
@@ -52,7 +58,6 @@ public class ReviewBoardClient
 
     public void login() throws ReviewBoardException
     {
-        m_needsLogin = false;
         final LoginMethod login = new LoginMethod( m_uri, m_username, m_password );
         processRequest( login );
     }
@@ -60,9 +65,6 @@ public class ReviewBoardClient
     private void processRequest( final ReviewBoardMethod method )
         throws ReviewBoardException
     {
-        if( m_needsLogin )
-            login();
-
         try
         {
             executeMethod( method );
@@ -108,9 +110,6 @@ public class ReviewBoardClient
 
     public void setUsername( final String username )
     {
-        if( !username.equals( m_username ) )
-            m_needsLogin = true;
-
         m_username = username;
     }
 
@@ -121,9 +120,6 @@ public class ReviewBoardClient
 
     public void setPassword( final String password )
     {
-        if( !password.equals( m_password ) )
-            m_needsLogin = true;
-        
         m_password = password;
     }
 

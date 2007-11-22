@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.review_board.client.ReviewBoardClient;
+import org.review_board.client.ReviewBoardException;
 import org.review_board.idea.plugin.settings.ProjectSettings;
 import org.review_board.idea.plugin.settings.UserSettings;
 
@@ -105,6 +107,18 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
     {
         if ( m_form != null )
             m_form.getData();
+
+        final ReviewBoardClient client = new ReviewBoardClient(
+            m_userSettings.getUsername(), m_userSettings.getPassword(),
+            m_projectSettings.getServerUrl() );
+        try
+        {
+            client.login();
+        }
+        catch( ReviewBoardException e )
+        {
+            throw new ConfigurationException( "Error loggin in!" );
+        }
     }
 
     public void reset()
