@@ -24,7 +24,16 @@ public class ReviewBoardCommitSession implements CommitSession
     }
 
     @Nullable
+    @Deprecated
+    /** {@inheritDoc} */
     public JComponent getAdditionalConfigurationUI()
+    {
+        return null;
+    }
+
+    @Nullable
+    /** {@inheritDoc} */
+    public JComponent getAdditionalConfigurationUI( Collection<Change> changes, String s )
     {
         return null;
     }
@@ -35,6 +44,7 @@ public class ReviewBoardCommitSession implements CommitSession
         return true;
     }
 
+    /** {@inheritDoc} */
     public void execute( final Collection<Change> changes, final String commitMessage )
     {
         try
@@ -58,7 +68,7 @@ public class ReviewBoardCommitSession implements CommitSession
             List<FilePatch> patches = PatchBuilder
                 .buildPatch( changes, m_project.getBaseDir().getPath(), true, false );
             StringWriter writer = new StringWriter( 2048 );
-            UnifiedDiffWriter.write( patches, writer );
+            UnifiedDiffWriter.write( patches, writer, "\n" );
             System.out.print( writer.toString() );
         }
         catch ( Exception e )

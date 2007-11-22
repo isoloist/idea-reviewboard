@@ -16,7 +16,7 @@ public class Response extends AbstractReviewBoardObject
 
     private static final String MESSAGE_KEY = "msg";
 
-    static final int NOT_LOGGED_IN_CODE = 103;
+    private static final int NOT_LOGGED_IN_CODE = 103;
 
     public Response( final String s ) throws ReviewBoardException
     {

@@ -5,13 +5,13 @@ import org.review_board.client.ReviewBoardException;
 
 public class Repository extends AbstractReviewBoardObject
 {
-    public static final String ID_KEY = "id";
+    private static final String ID_KEY = "id";
 
-    public static final String PATH_KEY = "path";
+    private static final String PATH_KEY = "path";
 
-    public static final String TOOL_KEY = "tool";
+    private static final String TOOL_KEY = "tool";
 
-    public static final String NAME_KEY = "name";
+    private static final String NAME_KEY = "name";
 
     public Repository( final JSONObject jsonObject )
     {
