@@ -37,17 +37,25 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
 
     private final UserSettings m_userSettings;
 
+    private final ReviewBoardClient m_client;
+
     public ReviewBoardPlugin( final Project project, final UserSettings userSettings,
         final ProjectSettings projectSettings )
     {
         m_project = project;
         m_projectSettings = projectSettings;
         m_userSettings = userSettings;
+        m_client = new ReviewBoardClient( userSettings, projectSettings );
     }
 
     public static ReviewBoardPlugin getInstance( Project project )
     {
         return project.getComponent( ReviewBoardPlugin.class );
+    }
+
+    public ReviewBoardClient getClient()
+    {
+        return m_client;
     }
 
     public void initComponent()
@@ -108,16 +116,16 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         if ( m_form != null )
             m_form.getData();
 
-        final ReviewBoardClient client = new ReviewBoardClient(
-            m_userSettings.getUsername(), m_userSettings.getPassword(),
-            m_projectSettings.getServerUrl() );
+        m_client.setUsername( m_userSettings.getUsername() );
+        m_client.setPassword( m_userSettings.getPassword() );
+        m_client.setUri( m_projectSettings.getServerUrl() );
         try
         {
-            client.login();
+            m_client.login();
         }
         catch( ReviewBoardException e )
         {
-            throw new ConfigurationException( "Error loggin in!" );
+            throw new ConfigurationException( "Error logging in!" );
         }
     }
 

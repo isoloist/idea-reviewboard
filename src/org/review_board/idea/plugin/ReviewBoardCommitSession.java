@@ -4,18 +4,15 @@ import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchBuilder;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
-import com.intellij.vcsUtil.VcsUtil;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.svn.SvnVcs;
-import org.tmatesoft.svn.core.wc.SVNInfo;
 
 public class ReviewBoardCommitSession implements CommitSession
 {
@@ -69,22 +66,23 @@ public class ReviewBoardCommitSession implements CommitSession
              * The fourth argument tells it whether or not to reverse the order of the
              * patch.
              */
+            // TODO PatchBulder throws VcsException if you try to get a patch when the VCS is updating.  Do something useful?
             List<FilePatch> patches = PatchBuilder
                 .buildPatch( changes, m_project.getBaseDir().getPath(), true, false );
             StringWriter writer = new StringWriter( 2048 );
             UnifiedDiffWriter.write( patches, writer, "\n" );
             System.out.print( writer.toString() );
-            AbstractVcs vcs = VcsUtil.getVcsFor( m_project, m_project.getBaseDir() );
-            System.out.println( "vcs: " + vcs.getClass().getName() + " " + vcs.getDisplayName() );
-            if( vcs instanceof SvnVcs )
+            RepositoryFinder repofinder =
+                RepositoryFinderFactory.getInstance().getRepositoryFinder( m_project );
+            final Map<String, Object> repoinfo = repofinder.findRepository();
+            if( repoinfo == null )
             {
-                SvnVcs svn = (SvnVcs)vcs;
-                SVNInfo info = svn.getInfoWithCaching( m_project.getBaseDir() );
-                System.out.println( "URL: " + info.getURL() );
+                System.out.println( "couldn't find a repository!" );
+                return;
             }
-            else
+            for( String key : repoinfo.keySet() )
             {
-                System.out.println( "no way jose??!" );
+                System.out.println( key + ": " + repoinfo.get( key ) );
             }
         }
         catch ( Exception e )
