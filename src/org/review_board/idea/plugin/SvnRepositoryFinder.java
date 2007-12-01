@@ -5,10 +5,14 @@
 */
 package org.review_board.idea.plugin;
 
+import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.svn.SvnVcs;
 import org.json.JSONObject;
 import org.review_board.client.ReviewBoardClient;
@@ -29,9 +33,12 @@ public class SvnRepositoryFinder implements RepositoryFinder
         m_vcs = vcs;
     }
 
-    public Map<String, Object> findRepository()
+    @Nullable
+    public Map<String, Object> findRepository( final ProgressIndicator indicator )
         throws ReviewBoardException
     {
+        indicator.setText( "Determining repository...");
+        indicator.setText2( "Getting info for local checkout" );
         SVNInfo localInfo = m_vcs.getInfoWithCaching( m_project.getBaseDir() );
         if ( localInfo == null )
             return null;
@@ -45,14 +52,23 @@ public class SvnRepositoryFinder implements RepositoryFinder
 
         ReviewBoardClient client = ReviewBoardPlugin.getInstance( m_project ).getClient();
 
+        indicator.setText2( "Getting list of repositories on server" );
         Collection<Repository> repositories = client.getRepositories();
-        for ( Repository repository : repositories )
-        {
-            if( ! repository.getTool().equals( "Subversion" ) )
-                continue;
 
+        final Collection<Repository> svnRepositories =
+            filterSvnRepositories( repositories );
+
+        int repositoryNum = 0;
+        for ( Repository repository : svnRepositories )
+        {
             try
             {
+                indicator.setText2(
+                    "Getting info for repository " + repository.getName() );
+                indicator.setIndeterminate( false );
+                indicator.setFraction(
+                    (double)repositoryNum++ / svnRepositories.size() + 1.0 / (2
+                        * svnRepositories.size()) );
                 JSONObject info = client.getRepositoryInfo( repository.getId() );
                 String remoteUuid = (String)info.get( "uuid" );
                 String remoteRelative = getRelativePath( (String)info.get( "url" ),
@@ -83,6 +99,22 @@ public class SvnRepositoryFinder implements RepositoryFinder
         return null;
     }
 
+    @NotNull
+    private Collection<Repository> filterSvnRepositories(
+        Collection<Repository> repositories ) throws ReviewBoardException
+    {
+        final Collection<Repository> svnRepositories = new ArrayList<Repository>();
+        for( Repository repository : repositories )
+        {
+            if( repository.getTool().equals( "Subversion" ) )
+            {
+                svnRepositories.add( repository );
+            }
+        }
+        return svnRepositories;
+    }
+
+    @Nullable
     private static String getRelativePath( String url, String root )
     {
         url = url.replaceFirst( "/$", "" );

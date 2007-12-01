@@ -3,6 +3,7 @@ package org.review_board.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.json.JSONObject;
 import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
@@ -36,7 +37,9 @@ public class ReviewBoardClient
         m_username = username;
         m_password = password;
         m_uri = uri;
-        m_httpClient = new HttpClient();
+        MultiThreadedHttpConnectionManager manager =
+            new MultiThreadedHttpConnectionManager();
+        m_httpClient = new HttpClient( manager );
         m_requestFactory = new RequestFactory( uri );
     }
 

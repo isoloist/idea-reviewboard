@@ -3,6 +3,7 @@ package org.review_board.idea.plugin;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchBuilder;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
@@ -13,6 +14,7 @@ import java.util.Map;
 import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.review_board.client.ReviewBoardException;
 
 public class ReviewBoardCommitSession implements CommitSession
 {
@@ -36,6 +38,29 @@ public class ReviewBoardCommitSession implements CommitSession
     /** {@inheritDoc} */
     public JComponent getAdditionalConfigurationUI( Collection<Change> changes, String s )
     {
+        final RepositoryFinderTask task = new RepositoryFinderTask( m_project );
+        ProgressManager progressManager = ProgressManager.getInstance();
+        progressManager.run( task );
+
+        final Map<String, Object> repoinfo;
+        try
+        {
+            repoinfo = task.getResult();
+        }
+        catch ( ReviewBoardException e )
+        {
+            e.printStackTrace();
+            return null;
+        }
+        if( repoinfo == null )
+        {
+            System.out.println( "couldn't find a repository!" );
+            return null;
+        }
+        for( String key : repoinfo.keySet() )
+        {
+            System.out.println( key + ": " + repoinfo.get( key ) );
+        }
         return null;
     }
 
@@ -71,19 +96,7 @@ public class ReviewBoardCommitSession implements CommitSession
                 .buildPatch( changes, m_project.getBaseDir().getPath(), true, false );
             StringWriter writer = new StringWriter( 2048 );
             UnifiedDiffWriter.write( patches, writer, "\n" );
-            System.out.print( writer.toString() );
-            RepositoryFinder repofinder =
-                RepositoryFinderFactory.getInstance().getRepositoryFinder( m_project );
-            final Map<String, Object> repoinfo = repofinder.findRepository();
-            if( repoinfo == null )
-            {
-                System.out.println( "couldn't find a repository!" );
-                return;
-            }
-            for( String key : repoinfo.keySet() )
-            {
-                System.out.println( key + ": " + repoinfo.get( key ) );
-            }
+            System.out.println( "executed commit!" );
         }
         catch ( Exception e )
         {

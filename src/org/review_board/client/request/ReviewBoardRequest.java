@@ -21,18 +21,25 @@ public abstract class ReviewBoardRequest
     public Response execute( final HttpClient client )
         throws IOException, ReviewBoardException
     {
-        final int responseCode = client.executeMethod( m_method );
-
-        if ( responseCode >= 300 )
+        try
         {
-            throw new ReviewBoardException(
-                "HTTP error " + responseCode + ": " + HttpStatus
-                    .getStatusText( responseCode ) );
+            final int responseCode = client.executeMethod( m_method );
+
+            if ( responseCode >= 300 )
+            {
+                throw new ReviewBoardException(
+                    "HTTP error " + responseCode + ": " + HttpStatus
+                        .getStatusText( responseCode ) );
+            }
+
+            m_response = new Response( new String( m_method.getResponseBody() ) );
+
+            return m_response;
         }
-
-        m_response = new Response( new String( m_method.getResponseBody() ) );
-
-        return m_response;
+        finally
+        {
+            m_method.releaseConnection();
+        }
     }
 
     public Response getResponse() throws ReviewBoardException
