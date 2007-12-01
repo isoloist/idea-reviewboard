@@ -7,10 +7,6 @@
 */
 package org.review_board.client.request;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-
 public class RequestFactory
 {
     private final String m_baseUri;
@@ -35,9 +31,9 @@ public class RequestFactory
         return new RepositoriesRequest( m_baseUri );
     }
 
-    public RepositoryUuidRequest getRepositoryUuidRequest( final int repositoryId )
+    public RepositoryInfoRequest getRepositoryInfoRequest( final int repositoryId )
     {
-        return new RepositoryUuidRequest( m_baseUri, repositoryId );
+        return new RepositoryInfoRequest( m_baseUri, repositoryId );
     }
 
     public UsersRequest getUsersRequest()

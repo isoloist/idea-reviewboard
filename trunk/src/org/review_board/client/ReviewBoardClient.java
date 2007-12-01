@@ -3,6 +3,7 @@ package org.review_board.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.commons.httpclient.HttpClient;
+import org.json.JSONObject;
 import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
@@ -10,10 +11,12 @@ import org.review_board.client.json.User;
 import org.review_board.client.request.GroupsRequest;
 import org.review_board.client.request.LoginRequest;
 import org.review_board.client.request.RepositoriesRequest;
-import org.review_board.client.request.RepositoryUuidRequest;
+import org.review_board.client.request.RepositoryInfoRequest;
 import org.review_board.client.request.RequestFactory;
 import org.review_board.client.request.ReviewBoardRequest;
 import org.review_board.client.request.UsersRequest;
+import org.review_board.idea.plugin.settings.ProjectSettings;
+import org.review_board.idea.plugin.settings.UserSettings;
 
 public class ReviewBoardClient
 {
@@ -37,6 +40,13 @@ public class ReviewBoardClient
         m_requestFactory = new RequestFactory( uri );
     }
 
+    public ReviewBoardClient( final UserSettings userSettings,
+        final ProjectSettings projectSettings )
+    {
+        this( userSettings.getUsername(), userSettings.getPassword(),
+            projectSettings.getServerUrl() );
+    }
+
     public ArrayList<User> getUsers() throws ReviewBoardException
     {
         final UsersRequest request = m_requestFactory.getUsersRequest();
@@ -58,12 +68,13 @@ public class ReviewBoardClient
         return request.getRepositories();
     }
 
-    public String getRepositoryUuid( final int repositoryId ) throws ReviewBoardException
+    public JSONObject getRepositoryInfo( final int repositoryId )
+        throws ReviewBoardException
     {
-        final RepositoryUuidRequest request =
-            new RepositoryUuidRequest( m_uri, repositoryId );
+        final RepositoryInfoRequest request =
+            m_requestFactory.getRepositoryInfoRequest( repositoryId );
         processRequest( request );
-        return request.getRepositoryUuid();
+        return request.getRepositoryInfo();
     }
 
     public void login() throws ReviewBoardException

@@ -11,14 +11,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.idea.svn.SvnVcs;
-import org.review_board.idea.plugin.RepositoryFinder;
 
 public class RepositoryFinderFactory
 {
     private static final RepositoryFinderFactory sm_instance =
         new RepositoryFinderFactory();
 
-    RepositoryFinderFactory getInstance()
+    public static RepositoryFinderFactory getInstance()
     {
         return sm_instance;
     }
@@ -26,7 +25,7 @@ public class RepositoryFinderFactory
     public RepositoryFinder getRepositoryFinder( final Project project )
     {
         AbstractVcs vcs = VcsUtil.getVcsFor( project, project.getBaseDir() );
-        if( vcs instanceof SvnVcs )
+        if ( vcs instanceof SvnVcs )
         {
             return new SvnRepositoryFinder( project, (SvnVcs)vcs );
         }

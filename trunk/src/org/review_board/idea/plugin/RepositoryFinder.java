@@ -7,12 +7,13 @@
 */
 package org.review_board.idea.plugin;
 
-import java.util.Collection;
-import org.review_board.client.json.Repository;
+import java.util.Map;
+import org.review_board.client.ReviewBoardException;
 
 public interface RepositoryFinder
 {
-    public Repository findRepository( Collection<Repository> repositories );
+    public Map<String, Object> findRepository()
+        throws ReviewBoardException;
 }
 
 // eof: RepositoryFinder.java
