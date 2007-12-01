@@ -1,8 +1,6 @@
 /*
 * @(#)SvnRepositoryFinder.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 22, 2007 plumpy
 */
 package org.review_board.idea.plugin;
@@ -115,5 +113,3 @@ public class SvnRepositoryFinder implements RepositoryFinder
         return sb.toString();
     }
 }
-
-// eof: SvnRepositoryFinder.java
