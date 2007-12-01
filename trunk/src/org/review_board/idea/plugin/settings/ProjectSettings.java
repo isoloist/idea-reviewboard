@@ -1,8 +1,6 @@
 /*
 * @(#)ProjectSettings.java
 *
-* Copyright 2006 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Sep 21, 2007 plumpy
 */
 package org.review_board.idea.plugin.settings;
@@ -10,7 +8,6 @@ package org.review_board.idea.plugin.settings;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,5 +45,3 @@ public class ProjectSettings implements PersistentStateComponent<ProjectSettings
         XmlSerializerUtil.copyBean( state, this );
     }
 }
-
-// eof: ProjectSettings.java

@@ -1,8 +1,6 @@
 /*
 * @(#)UserSettings.java
 *
-* Copyright 2006 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Sep 21, 2007 plumpy
 */
 package org.review_board.idea.plugin.settings;
@@ -61,5 +59,3 @@ public class UserSettings implements PersistentStateComponent<UserSettings>
         XmlSerializerUtil.copyBean( state, this );
     }
 }
-
-// eof: UserSettings.java

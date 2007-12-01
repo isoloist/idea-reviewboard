@@ -1,8 +1,6 @@
 /*
 * @(#)RequestFactory.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 22, 2007 plumpy
 */
 package org.review_board.client.request;
@@ -41,5 +39,3 @@ public class RequestFactory
         return new UsersRequest( m_baseUri );
     }
 }
-
-// eof: RequestFactory.java

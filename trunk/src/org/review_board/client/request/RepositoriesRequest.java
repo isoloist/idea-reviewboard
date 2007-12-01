@@ -1,8 +1,6 @@
 /*
 * @(#)RepositoriesRequest.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 22, 2007 plumpy
 */
 package org.review_board.client.request;
@@ -10,7 +8,6 @@ package org.review_board.client.request;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
-import org.review_board.client.request.ReviewBoardRequest;
 import org.review_board.client.ReviewBoardException;
 import org.review_board.client.ReviewBoardClient;
 import org.json.JSONArray;
@@ -61,5 +58,3 @@ public class RepositoriesRequest extends ReviewBoardRequest
         }
     }
 }
-
-// eof: RepositoriesRequest.java

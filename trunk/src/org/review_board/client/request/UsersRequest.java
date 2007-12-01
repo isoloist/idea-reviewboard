@@ -1,8 +1,6 @@
 /*
 * @(#)UsersRequest.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 22, 2007 plumpy
 */
 package org.review_board.client.request;
@@ -44,5 +42,3 @@ public class UsersRequest extends ReviewBoardRequest
         return users;
     }
 }
-
-// eof: UsersRequest.java

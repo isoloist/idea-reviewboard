@@ -1,8 +1,6 @@
 /*
 * @(#)RepositoryInfoRequest.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 24, 2007 plumpy
 */
 package org.review_board.client.request;
@@ -26,5 +24,3 @@ public class RepositoryInfoRequest extends ReviewBoardRequest
         return (JSONObject)response.get( "info" );
     }
 }
-
-// eof: RepositoryInfoRequest.java

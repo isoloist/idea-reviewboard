@@ -1,8 +1,6 @@
 /*
 * @(#)Group.java
 *
-* Copyright 2007 Tripwire, Inc. All Rights Reserved.
-*
 * ver 1.0 Nov 21, 2007 plumpy
 */
 package org.review_board.client.json;
@@ -45,5 +43,3 @@ public class Group extends AbstractReviewBoardObject
         return get( URL_KEY ).toString();
     }
 }
-
-// eof: Group.java
