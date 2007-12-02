@@ -1,4 +1,4 @@
-package org.review_board.idea.plugin;
+package org.review_board.idea.plugin.form;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -6,7 +6,7 @@ import javax.swing.JTextField;
 import org.review_board.idea.plugin.settings.ProjectSettings;
 import org.review_board.idea.plugin.settings.UserSettings;
 
-public class ReviewBoardConfigurationForm
+public class ConfigurationForm
 {
     private JTextField m_serverUrl;
 
@@ -20,7 +20,7 @@ public class ReviewBoardConfigurationForm
 
     private ProjectSettings m_projectSettings;
 
-    public ReviewBoardConfigurationForm( UserSettings userSettings,
+    public ConfigurationForm( UserSettings userSettings,
         ProjectSettings projectSettings )
     {
         m_userSettings = userSettings;

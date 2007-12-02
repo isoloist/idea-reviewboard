@@ -18,6 +18,7 @@ import org.review_board.client.ReviewBoardClient;
 import org.review_board.client.ReviewBoardException;
 import org.review_board.idea.plugin.settings.ProjectSettings;
 import org.review_board.idea.plugin.settings.UserSettings;
+import org.review_board.idea.plugin.form.ConfigurationForm;
 
 @State(
     name = "ReviewBoard",
@@ -29,7 +30,7 @@ import org.review_board.idea.plugin.settings.UserSettings;
 )
 public class ReviewBoardPlugin implements ProjectComponent, Configurable
 {
-    private ReviewBoardConfigurationForm m_form;
+    private ConfigurationForm m_form;
 
     private final Project m_project;
 
@@ -100,7 +101,7 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         if ( m_form == null )
         {
             m_form =
-                new ReviewBoardConfigurationForm( m_userSettings, m_projectSettings );
+                new ConfigurationForm( m_userSettings, m_projectSettings );
         }
 
         return m_form.getRootComponent();

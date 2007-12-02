@@ -10,16 +10,21 @@ import com.intellij.openapi.vcs.changes.CommitSession;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.review_board.client.ReviewBoardException;
+import org.review_board.client.json.Repository;
+import org.review_board.idea.plugin.form.ReviewForm;
+import org.review_board.idea.plugin.repofind.RepositoryFinder;
+import org.review_board.idea.plugin.repofind.RepositoryFinderTask;
 
 public class ReviewBoardCommitSession implements CommitSession
 {
     @NotNull
     private Project m_project;
+
+    private ReviewForm m_form;
 
     public ReviewBoardCommitSession( @NotNull final Project project )
     {
@@ -36,32 +41,50 @@ public class ReviewBoardCommitSession implements CommitSession
 
     @Nullable
     /** {@inheritDoc} */
-    public JComponent getAdditionalConfigurationUI( Collection<Change> changes, String s )
+    public JComponent getAdditionalConfigurationUI( Collection<Change> changes,
+        String commitMessage )
     {
-        final RepositoryFinderTask task = new RepositoryFinderTask( m_project );
-        ProgressManager progressManager = ProgressManager.getInstance();
-        progressManager.run( task );
+        if ( m_form == null )
+        {
+            final RepositoryFinderTask task = new RepositoryFinderTask( m_project );
+            ProgressManager progressManager = ProgressManager.getInstance();
+            progressManager.run( task );
 
-        final Map<String, Object> repoinfo;
-        try
-        {
-            repoinfo = task.getResult();
+            Collection<Repository> repositories = null;
+            RepositoryFinder.FoundRepositoryInfo repoinfo = null;
+            try
+            {
+                repositories = task.getRepositories();
+                repoinfo = task.getResult();
+            }
+            catch ( ReviewBoardException e )
+            {
+                e.printStackTrace();
+            }
+            if( repositories == null )
+            {
+                return null; // OHFUCKY
+            }
+            if ( repoinfo == null )
+            {
+                System.out.println( "couldn't find a repository!" );
+            }
+
+            m_form = new ReviewForm();
+            m_form.setCommitMessage( commitMessage );
+            
+            if ( repoinfo != null )
+            {
+                m_form.setRepositories( repositories, repoinfo );
+                System.out.println( "repository: " + repoinfo.getRepository().getName() );
+                System.out.println( "base path: " + repoinfo.getBaseDiffPath() );
+            }
+            else
+            {
+                System.out.println( "couldn't find a repository!" );
+            }
         }
-        catch ( ReviewBoardException e )
-        {
-            e.printStackTrace();
-            return null;
-        }
-        if( repoinfo == null )
-        {
-            System.out.println( "couldn't find a repository!" );
-            return null;
-        }
-        for( String key : repoinfo.keySet() )
-        {
-            System.out.println( key + ": " + repoinfo.get( key ) );
-        }
-        return null;
+        return m_form.getRootComponent();
     }
 
     public boolean canExecute( final Collection<Change> changes,

@@ -3,7 +3,7 @@
 *
 * ver 1.0 Nov 22, 2007 plumpy
 */
-package org.review_board.idea.plugin;
+package org.review_board.idea.plugin.repofind;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
