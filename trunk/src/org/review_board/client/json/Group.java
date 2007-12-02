@@ -18,28 +18,40 @@ public class Group extends AbstractReviewBoardObject
 
     private static final String URL_KEY = "url";
 
-    public Group( JSONObject jsonObject )
+    private final int m_id;
+
+    private final String m_mailingList;
+
+    private final String m_name;
+
+    private final String m_url;
+
+    public Group( JSONObject jsonObject ) throws ReviewBoardException
     {
         super( jsonObject );
+        m_id = (Integer)get( ID_KEY );
+        m_mailingList = (String)get( MAILING_LIST_KEY );
+        m_name = (String)get( NAME_KEY );
+        m_url = (String)get( URL_KEY );
     }
 
-    public int getId() throws ReviewBoardException
+    public int getId()
     {
-        return (Integer)get( ID_KEY );
+        return m_id;
     }
 
-    public String getMailingList() throws ReviewBoardException
+    public String getMailingList()
     {
-        return get( MAILING_LIST_KEY ).toString();
+        return m_mailingList;
     }
 
-    public String getName() throws ReviewBoardException
+    public String getName()
     {
-        return get( NAME_KEY ).toString();
+        return m_name;
     }
 
-    public String getUrl() throws ReviewBoardException
+    public String getUrl()
     {
-        return get( URL_KEY ).toString();
+        return m_url;
     }
 }
