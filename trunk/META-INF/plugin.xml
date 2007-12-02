@@ -8,13 +8,9 @@
     <actions>
         <action id="ReviewBoard.SubmitReviewAction"
                 class="org.review_board.idea.plugin.SubmitReviewAction"
-                text="Submit Changes to Review Board">
+                text="Submit to Review Board...">
             <add-to-group group-id="VcsGlobalGroup" anchor="after"
                           relative-to-action="ChangesView.Shelve"/>
-        </action>
-        <action id="ReviewBoard.SubmitReviewFromChanges"
-                class="org.review_board.idea.plugin.SubmitReviewFromChangesAction"
-                text="Submit to Review Board...">
             <add-to-group group-id="ChangesViewPopupMenu" anchor="after"
                           relative-to-action="ChangesView.Shelve"/>
         </action>

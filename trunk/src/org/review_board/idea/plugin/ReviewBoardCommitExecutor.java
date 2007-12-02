@@ -26,7 +26,7 @@ public class ReviewBoardCommitExecutor implements CommitExecutor
     @Nls
     public String getActionText()
     {
-        return "Submit to Review Board";
+        return "Submit to Review Board...";
     }
 
     @Nls
