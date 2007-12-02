@@ -9,15 +9,18 @@
 package org.review_board.idea.plugin.form;
 
 import com.intellij.openapi.util.text.StringUtil;
-import java.awt.Color;
 import java.util.Collection;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.review_board.ServerConstants;
 import org.review_board.client.json.Repository;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 
@@ -51,11 +54,11 @@ public class ReviewForm
 
     public ReviewForm()
     {
-        m_description.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
-        m_testingDone.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
         m_repositoryPanel.setBorder( BorderFactory.createTitledBorder( "Repository" ) );
         m_reviewersPanel.setBorder( BorderFactory.createTitledBorder( "Reviewers" ) );
         m_infoPanel.setBorder( BorderFactory.createTitledBorder( "Info" ) );
+        m_summary
+            .setDocument( new SizeLimitedDocument( ServerConstants.MAX_SUMMARY_LENGTH ) );
     }
 
     public JPanel getRootComponent()
@@ -131,9 +134,34 @@ public class ReviewForm
 
     public void setCommitMessage( final String commitMessage )
     {
-        if ( commitMessage.indexOf( '\n' ) == -1 && commitMessage.length() <= 300 )
+        if ( commitMessage.indexOf( '\n' ) == -1
+            && commitMessage.length() <= ServerConstants.MAX_SUMMARY_LENGTH )
+        {
             m_summary.setText( commitMessage );
+        }
         else
+        {
             m_description.setText( commitMessage );
+        }
+    }
+
+    private class SizeLimitedDocument extends PlainDocument
+    {
+        private final int m_sizeLimit;
+
+        private SizeLimitedDocument( int sizeLimit )
+        {
+            m_sizeLimit = sizeLimit;
+        }
+
+        public void insertString( int offs, String str, AttributeSet a )
+            throws BadLocationException
+        {
+            if ( str == null )
+                return;
+
+            if ( getLength() + str.length() <= m_sizeLimit )
+                super.insertString( offs, str, a );
+        }
     }
 }

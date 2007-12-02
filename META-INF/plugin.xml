@@ -15,11 +15,16 @@
                           relative-to-action="ChangesView.Shelve"/>
         </action>
     </actions>
-    <idea-version since-build="7364"/>
+    <idea-version since-build="7200" until-build="7499"/>
     <project-components>
         <component>
             <implementation-class>
                 org.review_board.idea.plugin.ReviewBoardPlugin
+            </implementation-class>
+        </component>
+        <component>
+            <implementation-class>
+                org.review_board.idea.plugin.ReviewBoardCommitExecutor
             </implementation-class>
         </component>
     </project-components>

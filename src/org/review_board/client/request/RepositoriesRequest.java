@@ -17,7 +17,7 @@ import java.util.Collection;
 
 public class RepositoriesRequest extends ReviewBoardRequest
 {
-    public RepositoriesRequest(final String baseUri)
+    public RepositoriesRequest( final String baseUri )
     {
         m_method = new GetMethod( baseUri + "repositories/" );
     }
