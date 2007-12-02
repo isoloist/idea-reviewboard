@@ -16,9 +16,9 @@ public class ConfigurationForm
 
     private JPanel m_rootComponent;
 
-    private UserSettings m_userSettings;
+    private final UserSettings m_userSettings;
 
-    private ProjectSettings m_projectSettings;
+    private final ProjectSettings m_projectSettings;
 
     public ConfigurationForm( UserSettings userSettings,
         ProjectSettings projectSettings )
@@ -46,17 +46,24 @@ public class ConfigurationForm
         m_userSettings.setPassword( m_password.getText() );
     }
 
+    @SuppressWarnings({"RedundantIfStatement"})
     public boolean isModified()
     {
-        if ( m_serverUrl.getText() != null ? !m_serverUrl.getText()
-            .equals( m_projectSettings.getServerUrl() )
-            : m_projectSettings.getServerUrl() != null ) return true;
-        if ( m_username.getText() != null ? !m_username.getText()
-            .equals( m_userSettings.getUsername() )
-            : m_userSettings.getUsername() != null ) return true;
-        if ( m_password.getText() != null ? !m_password.getText()
-            .equals( m_userSettings.getPassword() )
-            : m_userSettings.getPassword() != null ) return true;
+        if( !equals( m_serverUrl.getText(), m_projectSettings.getServerUrl() ) )
+            return true;
+        if( !equals( m_username.getText(), m_userSettings.getUsername() ) )
+            return true;
+        if( !equals( m_password.getText(), m_userSettings.getPassword() ) )
+            return true;
+
         return false;
+    }
+
+    @SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
+    boolean equals( final String s1, final String s2 )
+    {
+        if( s1 == null || s1.equals( "" ) )
+            return s2 == null || s2.equals( "" );
+        return s1.equals( s2 );
     }
 }

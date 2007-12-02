@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.svn.SvnVcs;
 import org.json.JSONObject;
 import org.review_board.client.ReviewBoardClient;
-import org.review_board.client.ReviewBoardException;
 import org.review_board.client.json.Repository;
 import org.review_board.idea.plugin.ReviewBoardPlugin;
 import org.tmatesoft.svn.core.wc.SVNInfo;
@@ -32,9 +31,10 @@ public class SvnRepositoryFinder implements RepositoryFinder
         m_vcs = vcs;
     }
 
+    @SuppressWarnings({"ConstantConditions"})
     @Nullable
     public FoundRepositoryInfo findRepository( final Collection<Repository> repositories,
-        final ProgressIndicator indicator ) throws ReviewBoardException
+        final ProgressIndicator indicator )
     {
         indicator.setText2( "Getting info for local checkout" );
         if( indicator.isCanceled() )
@@ -92,7 +92,7 @@ public class SvnRepositoryFinder implements RepositoryFinder
 
     @NotNull
     private Collection<Repository> filterSvnRepositories(
-        Collection<Repository> repositories ) throws ReviewBoardException
+        final Collection<Repository> repositories )
     {
         final Collection<Repository> svnRepositories = new ArrayList<Repository>();
         for( Repository repository : repositories )

@@ -13,7 +13,8 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Summary"/>
+          <labelFor value="3d852"/>
+          <text value="&amp;Summary"/>
         </properties>
       </component>
       <component id="3d852" class="javax.swing.JTextField" binding="m_summary">
@@ -37,7 +38,8 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Repository"/>
+              <labelFor value="7cb3f"/>
+              <text value="&amp;Repository"/>
             </properties>
           </component>
           <component id="7cb3f" class="javax.swing.JComboBox" binding="m_repository">
@@ -51,7 +53,8 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Base Diff Path"/>
+              <labelFor value="96c08"/>
+              <text value="Base Di&amp;ff Path"/>
             </properties>
           </component>
           <component id="96c08" class="javax.swing.JTextField" binding="m_baseDiffPath">
@@ -77,7 +80,8 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Groups"/>
+              <labelFor value="3d7d6"/>
+              <text value="&amp;Groups"/>
             </properties>
           </component>
           <component id="3d7d6" class="javax.swing.JTextField" binding="m_groups">
@@ -93,7 +97,8 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="People"/>
+              <labelFor value="9d36c"/>
+              <text value="&amp;People"/>
             </properties>
           </component>
           <component id="9d36c" class="javax.swing.JTextField" binding="m_people">
@@ -119,7 +124,8 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Branch"/>
+              <labelFor value="3971d"/>
+              <text value="&amp;Branch"/>
             </properties>
           </component>
           <component id="3971d" class="javax.swing.JTextField" binding="m_branch">
@@ -135,7 +141,8 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Bugs"/>
+              <labelFor value="97d55"/>
+              <text value="B&amp;ugs"/>
             </properties>
           </component>
           <component id="97d55" class="javax.swing.JTextField" binding="m_bugs">
@@ -151,7 +158,8 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Description"/>
+              <labelFor value="d2c54"/>
+              <text value="&amp;Description"/>
             </properties>
           </component>
           <vspacer id="4fd3">
@@ -159,17 +167,6 @@
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="d2c54" class="javax.swing.JTextArea" binding="m_description">
-            <constraints>
-              <grid row="2" column="1" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="300" height="150"/>
-              </grid>
-            </constraints>
-            <properties>
-              <lineWrap value="true"/>
-              <wrapStyleWord value="true"/>
-            </properties>
-          </component>
           <component id="23ffb" class="javax.swing.JLabel">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -177,7 +174,8 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Testing Done"/>
+              <labelFor value="4d96"/>
+              <text value="&amp;Testing Done"/>
             </properties>
           </component>
           <vspacer id="aaab6">
@@ -185,16 +183,45 @@
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="4d96" class="javax.swing.JTextArea" binding="m_testingDone">
+          <scrollpane id="8d4c1">
             <constraints>
-              <grid row="4" column="1" row-span="2" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="2" column="1" row-span="2" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="150"/>
               </grid>
             </constraints>
             <properties/>
-          </component>
+            <border type="none"/>
+            <children>
+              <component id="d2c54" class="javax.swing.JTextArea" binding="m_description">
+                <constraints/>
+                <properties>
+                  <lineWrap value="true"/>
+                  <wrapStyleWord value="true"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="5a55a">
+            <constraints>
+              <grid row="4" column="1" row-span="2" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="150"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="4d96" class="javax.swing.JTextArea" binding="m_testingDone">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
     </children>
   </grid>
+  <inspectionSuppressions>
+    <suppress inspection="NoLabelFor" id="8d4c1"/>
+    <suppress inspection="NoLabelFor" id="5a55a"/>
+  </inspectionSuppressions>
 </form>

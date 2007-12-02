@@ -8,9 +8,9 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
-public class ReviewBoardCommitExecutor implements CommitExecutor
+class ReviewBoardCommitExecutor implements CommitExecutor
 {
-    private Project m_project;
+    private final Project m_project;
 
     public ReviewBoardCommitExecutor( final Project project )
     {
