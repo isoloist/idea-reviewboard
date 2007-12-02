@@ -13,28 +13,45 @@ public class Repository extends AbstractReviewBoardObject
 
     private static final String NAME_KEY = "name";
 
-    public Repository( final JSONObject jsonObject )
+    private final int m_id;
+
+    private final String m_path;
+
+    private final String m_name;
+
+    private final String m_tool;
+
+    public Repository( final JSONObject jsonObject ) throws ReviewBoardException
     {
         super( jsonObject );
+        m_id = (Integer)get( ID_KEY );
+        m_path = (String)get( PATH_KEY );
+        m_name = (String)get( NAME_KEY );
+        m_tool = (String)get( TOOL_KEY );
     }
 
-    public int getId() throws ReviewBoardException
+    public int getId()
     {
-        return (Integer)get( ID_KEY );
+        return m_id;
     }
 
-    public String getPath() throws ReviewBoardException
+    public String getName()
     {
-        return (String)get( PATH_KEY );
+        return m_name;
     }
 
-    public String getName() throws ReviewBoardException
+    public String getPath()
     {
-        return (String)get( NAME_KEY );
+        return m_path;
     }
 
-    public String getTool() throws ReviewBoardException
+    public String getTool()
     {
-        return (String)get( TOOL_KEY );
+        return m_tool;
+    }
+
+    public String toString()
+    {
+        return getName();
     }
 }
