@@ -13,7 +13,7 @@ public class ReviewBoardException extends Exception
         super( s );
     }
 
-    public ReviewBoardException( String s, Throwable throwable )
+    private ReviewBoardException( String s, Throwable throwable )
     {
         super( s, throwable );
     }

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public abstract class ReviewBoardRequest
 {
-    protected HttpMethod m_method;
+    HttpMethod m_method;
 
     private Response m_response;
 
@@ -42,7 +42,7 @@ public abstract class ReviewBoardRequest
         }
     }
 
-    public Response getResponse() throws ReviewBoardException
+    Response getResponse() throws ReviewBoardException
     {
         if ( m_response == null )
         {

@@ -21,7 +21,7 @@ import org.review_board.idea.plugin.settings.UserSettings;
 
 public class ReviewBoardClient
 {
-    private HttpClient m_httpClient;
+    private final HttpClient m_httpClient;
 
     private RequestFactory m_requestFactory;
 
@@ -92,9 +92,7 @@ public class ReviewBoardClient
     {
         try
         {
-            request.execute( m_httpClient );
-
-            final Response response = request.getResponse();
+            final Response response = request.execute( m_httpClient );
 
             if ( response.isFailure() )
             {

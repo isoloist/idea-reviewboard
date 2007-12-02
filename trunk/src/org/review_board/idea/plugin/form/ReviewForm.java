@@ -8,6 +8,7 @@
 
 package org.review_board.idea.plugin.form;
 
+import com.intellij.openapi.util.text.StringUtil;
 import java.awt.Color;
 import java.util.Collection;
 import javax.swing.BorderFactory;
@@ -15,6 +16,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.review_board.client.json.Repository;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 
@@ -60,21 +63,75 @@ public class ReviewForm
         return m_rootComponent;
     }
 
-    public void setRepositories( final Collection<Repository> repositories,
-        final RepositoryFinder.FoundRepositoryInfo repositoryInfo )
+    public String getBaseDiffPath()
     {
-        for( Repository repository : repositories )
+        return m_baseDiffPath.getText();
+    }
+
+    public String getBranch()
+    {
+        return m_branch.getText();
+    }
+
+    public String getBugs()
+    {
+        return m_bugs.getText();
+    }
+
+    public String getDescription()
+    {
+        return m_description.getText();
+    }
+
+    public String getGroups()
+    {
+        return m_groups.getText();
+    }
+
+    public String getPeople()
+    {
+        return m_people.getText();
+    }
+
+    public Repository getRepository()
+    {
+        return (Repository)m_repository.getSelectedItem();
+    }
+
+    String getSummary()
+    {
+        return m_summary.getText();
+    }
+
+    @SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
+    public boolean hasSummary()
+    {
+        return !StringUtil.isEmptyOrSpaces( getSummary() );
+    }
+
+    public String getTestingDone()
+    {
+        return m_testingDone.getText();
+    }
+
+    public void setRepositories( @NotNull final Collection<Repository> repositories,
+        @Nullable final RepositoryFinder.FoundRepositoryInfo repositoryInfo )
+    {
+        for ( Repository repository : repositories )
         {
             m_repository.addItem( repository );
         }
 
-        m_repository.setSelectedItem( repositoryInfo.getRepository() );
-        m_baseDiffPath.setText( repositoryInfo.getBaseDiffPath() );
+        if ( repositoryInfo != null )
+        {
+            m_repository.setSelectedItem( repositoryInfo.getRepository() );
+            m_baseDiffPath.setText( repositoryInfo.getBaseDiffPath() );
+        }
     }
 
     public void setCommitMessage( final String commitMessage )
     {
-        if( commitMessage.indexOf( '\n' ) == -1 && commitMessage.length() <= 300 )
+        if ( commitMessage.indexOf( '\n' ) == -1 && commitMessage.length() <= 300 )
             m_summary.setText( commitMessage );
         else
             m_description.setText( commitMessage );

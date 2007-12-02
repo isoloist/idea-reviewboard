@@ -44,12 +44,14 @@ public class RepositoriesRequest extends ReviewBoardRequest
         return repositories;
     }
 
+    @SuppressWarnings({"UnusedAssignment"})
     public static void main( String[] args )
     {
         try
         {
             final ReviewBoardClient client = new ReviewBoardClient( "plumpy", "foobar",
                 "http://localhost" );
+            //noinspection UnusedDeclaration
             final Collection<Repository> repositories = client.getRepositories();
         }
         catch ( ReviewBoardException e )

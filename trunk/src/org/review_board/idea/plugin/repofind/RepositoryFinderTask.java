@@ -17,7 +17,7 @@ import org.review_board.idea.plugin.ReviewBoardPlugin;
 
 public class RepositoryFinderTask extends Task.Modal
 {
-    private Project m_project;
+    private final Project m_project;
 
     private boolean m_finished = false;
 
@@ -66,6 +66,7 @@ public class RepositoryFinderTask extends Task.Modal
         }
     }
 
+    @Nullable
     public RepositoryFinder.FoundRepositoryInfo getResult() throws ReviewBoardException
     {
         if( !m_finished )
@@ -74,6 +75,7 @@ public class RepositoryFinderTask extends Task.Modal
         return m_result;
     }
 
+    @Nullable
     public Collection<Repository> getRepositories() throws ReviewBoardException
     {
         if( !m_finished )

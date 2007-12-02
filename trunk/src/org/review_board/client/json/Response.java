@@ -56,7 +56,7 @@ public class Response extends AbstractReviewBoardObject
         return getErrorCode() == NOT_LOGGED_IN_CODE;
     }
 
-    public int getErrorCode()
+    int getErrorCode()
     {
         return m_errorCode;
     }

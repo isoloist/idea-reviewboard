@@ -14,13 +14,13 @@ import org.review_board.client.json.Repository;
 public interface RepositoryFinder
 {
     public FoundRepositoryInfo findRepository( Collection<Repository> repositories,
-        ProgressIndicator indicator ) throws ReviewBoardException;
+        ProgressIndicator indicator );
 
     public class FoundRepositoryInfo
     {
-        private Repository m_repository;
+        private final Repository m_repository;
 
-        private String m_baseDiffPath;
+        private final String m_baseDiffPath;
 
         public FoundRepositoryInfo( Repository repository, String baseDiffPath
         )

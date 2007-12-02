@@ -8,12 +8,12 @@ public abstract class AbstractReviewBoardObject
 {
     private JSONObject m_jsonObject;
 
-    protected AbstractReviewBoardObject( final JSONObject jsonObject )
+    AbstractReviewBoardObject( final JSONObject jsonObject )
     {
         m_jsonObject = jsonObject;
     }
 
-    protected AbstractReviewBoardObject( final String string ) throws ReviewBoardException
+    AbstractReviewBoardObject( final String string ) throws ReviewBoardException
     {
         try
         {
