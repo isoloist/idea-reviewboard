@@ -6,7 +6,6 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -16,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.review_board.client.ReviewBoardClient;
 import org.review_board.client.ReviewBoardException;
+import org.review_board.idea.plugin.form.ConfigurationForm;
 import org.review_board.idea.plugin.settings.ProjectSettings;
 import org.review_board.idea.plugin.settings.UserSettings;
-import org.review_board.idea.plugin.form.ConfigurationForm;
 
 @State(
     name = "ReviewBoard",
@@ -32,18 +31,15 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
 {
     private ConfigurationForm m_form;
 
-    private final Project m_project;
-
     private final ProjectSettings m_projectSettings;
 
     private final UserSettings m_userSettings;
 
     private final ReviewBoardClient m_client;
 
-    public ReviewBoardPlugin( final Project project, final UserSettings userSettings,
+    public ReviewBoardPlugin( final UserSettings userSettings,
         final ProjectSettings projectSettings )
     {
-        m_project = project;
         m_projectSettings = projectSettings;
         m_userSettings = userSettings;
         m_client = new ReviewBoardClient( userSettings, projectSettings );
@@ -59,18 +55,14 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         return m_client;
     }
 
-    public void initComponent()
-    {
-        ChangeListManager.getInstance( m_project )
-            .registerCommitExecutor( new ReviewBoardCommitExecutor( m_project ) );
-    }
+    public void initComponent() { }
 
     public void disposeComponent() { }
 
     @NotNull
     public String getComponentName()
     {
-        return "ReviewBoard";
+        return "ReviewBoardPlugin";
     }
 
     public void projectOpened() { }
@@ -100,8 +92,7 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
     {
         if ( m_form == null )
         {
-            m_form =
-                new ConfigurationForm( m_userSettings, m_projectSettings );
+            m_form = new ConfigurationForm( m_userSettings, m_projectSettings );
         }
 
         return m_form.getRootComponent();
@@ -124,7 +115,7 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         {
             m_client.login();
         }
-        catch( ReviewBoardException e )
+        catch ( ReviewBoardException e )
         {
             throw new ConfigurationException( "Error logging in!" );
         }

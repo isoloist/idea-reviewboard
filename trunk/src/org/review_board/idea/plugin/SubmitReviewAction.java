@@ -21,6 +21,6 @@ public class SubmitReviewAction extends AbstractCommitChangesAction
     @Nullable
     protected CommitExecutor getExecutor( Project project )
     {
-        return new ReviewBoardCommitExecutor( project );
+        return ReviewBoardCommitExecutor.getInstance( project );
     }
 }
