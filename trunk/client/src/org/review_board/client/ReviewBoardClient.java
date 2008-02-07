@@ -19,6 +19,8 @@ import org.review_board.client.request.UsersRequest;
 
 public class ReviewBoardClient
 {
+    public static final boolean DEBUG = Boolean.getBoolean( "review_board.client.debug" );
+    
     private final HttpClient m_httpClient;
 
     private RequestFactory m_requestFactory;

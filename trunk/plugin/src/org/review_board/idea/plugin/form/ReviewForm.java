@@ -106,10 +106,16 @@ public class ReviewForm
         return m_summary.getText();
     }
 
-    @SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
     public boolean hasSummary()
     {
         return !StringUtil.isEmptyOrSpaces( getSummary() );
+    }
+
+    public boolean hasRecipient()
+    {
+        // must have either a user or a group
+        return !StringUtil.isEmptyOrSpaces( getPeople() )
+                || !StringUtil.isEmptyOrSpaces( getGroups() );
     }
 
     public String getTestingDone()
