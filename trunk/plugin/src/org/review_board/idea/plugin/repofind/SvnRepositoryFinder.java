@@ -50,7 +50,7 @@ public class SvnRepositoryFinder implements RepositoryFinder
 
         String localUuid = localInfo.getRepositoryUUID();
 
-        ReviewBoardClient client = ReviewBoardPlugin.getInstance( m_project ).getClient();
+        ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
 
         final Collection<Repository> svnRepositories =
             filterSvnRepositories( repositories );

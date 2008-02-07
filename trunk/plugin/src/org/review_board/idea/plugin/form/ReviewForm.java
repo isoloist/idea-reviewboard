@@ -10,6 +10,7 @@ package org.review_board.idea.plugin.form;
 
 import com.intellij.openapi.util.text.StringUtil;
 import java.util.Collection;
+import java.util.Collections;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.review_board.ServerConstants;
 import org.review_board.client.json.Repository;
+import org.review_board.client.json.ReviewRequest;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 
 public class ReviewForm
@@ -115,7 +117,7 @@ public class ReviewForm
     {
         // must have either a user or a group
         return !StringUtil.isEmptyOrSpaces( getPeople() )
-                || !StringUtil.isEmptyOrSpaces( getGroups() );
+            || !StringUtil.isEmptyOrSpaces( getGroups() );
     }
 
     public String getTestingDone()
@@ -149,6 +151,21 @@ public class ReviewForm
         {
             m_description.setText( commitMessage );
         }
+    }
+
+    public ReviewRequest createReviewRequest()
+    {
+        final ReviewRequest request = new ReviewRequest();
+        request.setSummary( m_summary.getText() );
+        request.setRepository( (Repository)m_repository.getSelectedItem() );
+        request.setBaseDiffPath( m_baseDiffPath.getText() );
+        request.setBranch( m_branch.getText() );
+        request.setGroups( m_groups.getText() );
+        request.setPeople( m_people.getText() );
+        request.setBugs( m_bugs.getText() );
+        request.setDescription( m_description.getText() );
+        request.setTestingDone( m_testingDone.getText() );
+        return request;
     }
 
     private class SizeLimitedDocument extends PlainDocument

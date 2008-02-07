@@ -41,7 +41,7 @@ public class RepositoryFinderTask extends Task.Modal
         {
             indicator.setText( "Determining repository...");
 
-            ReviewBoardClient client = ReviewBoardPlugin.getInstance( m_project ).getClient();
+            ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
 
             indicator.setText2( "Getting list of repositories on server" );
             if( indicator.isCanceled() )

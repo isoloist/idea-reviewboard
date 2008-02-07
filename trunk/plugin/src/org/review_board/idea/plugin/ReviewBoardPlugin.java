@@ -54,6 +54,11 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         return project.getComponent( ReviewBoardPlugin.class );
     }
 
+    public static ReviewBoardClient getClient( Project project )
+    {
+        return getInstance( project ).getClient();
+    }
+
     public ReviewBoardClient getClient()
     {
         return m_client;
