@@ -345,7 +345,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plugin/plugin.iml" filepath="$PROJECT_DIR$/plugin/plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin/reviewboard.iml" filepath="$PROJECT_DIR$/plugin/reviewboard.iml" />
     </modules>
   </component>
   <component name="ProjectRootConfigurable.UI">
