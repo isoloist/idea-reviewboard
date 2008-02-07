@@ -101,8 +101,16 @@ class ReviewBoardCommitSession implements CommitSession
     private void checkExecute() throws ReviewBoardException
     {
         if ( !m_form.hasSummary() )
+        {
             throw new ReviewBoardException(
                 "You must enter a summary to submit a review!" );
+        }
+
+        if( !m_form.hasRecipient() )
+        {
+            throw new ReviewBoardException(
+                "You must enter either a person or a group!" );
+        }
     }
 
     /** {@inheritDoc} */
@@ -112,7 +120,9 @@ class ReviewBoardCommitSession implements CommitSession
         {
             checkExecute();
             final String patch = getPatch( changes );
-            System.out.println( "got patch of size " + patch.length() );
+
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "got patch of size " + patch.length() );
         }
         catch ( final Exception e )
         {

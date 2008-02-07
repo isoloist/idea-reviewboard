@@ -6,6 +6,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -29,6 +30,8 @@ import org.review_board.idea.plugin.settings.UserSettings;
 )
 public class ReviewBoardPlugin implements ProjectComponent, Configurable
 {
+    public static final boolean DEBUG = Boolean.getBoolean( "review_board.plugin.debug" );
+
     private ConfigurationForm m_form;
 
     private final ProjectSettings m_projectSettings;
@@ -109,9 +112,15 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         if ( m_form != null )
             m_form.getData();
 
+        final String url = m_projectSettings.getServerUrl();
+
         m_client.setUsername( m_userSettings.getUsername() );
         m_client.setPassword( m_userSettings.getPassword() );
-        m_client.setUri( m_projectSettings.getServerUrl() );
+        m_client.setUri( url );
+
+        if( StringUtil.isEmptyOrSpaces( url ) )
+            return;
+        
         try
         {
             m_client.login();

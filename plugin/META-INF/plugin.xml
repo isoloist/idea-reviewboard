@@ -15,7 +15,7 @@
                           relative-to-action="ChangesView.Shelve"/>
         </action>
     </actions>
-    <idea-version since-build="7200" until-build="7499"/>
+    <idea-version since-build="7000" until-build="7999"/>
     <project-components>
         <component>
             <implementation-class>

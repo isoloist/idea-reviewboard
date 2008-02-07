@@ -3,6 +3,7 @@ package org.review_board.client.json;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.review_board.client.ReviewBoardException;
+import org.review_board.client.ReviewBoardClient;
 
 public class Response extends AbstractReviewBoardObject
 {
@@ -43,7 +44,8 @@ public class Response extends AbstractReviewBoardObject
             }
         }
 
-        System.out.println( s );
+        if( ReviewBoardClient.DEBUG )
+            System.out.println( s );
     }
 
     public boolean isFailure()

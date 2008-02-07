@@ -5,15 +5,13 @@
 */
 package org.review_board.client.request;
 
+import java.util.ArrayList;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.review_board.client.json.Repository;
-import org.review_board.client.json.Response;
-import org.review_board.client.ReviewBoardException;
-import org.review_board.client.ReviewBoardClient;
 import org.json.JSONArray;
 import org.json.JSONException;
-import java.util.ArrayList;
-import java.util.Collection;
+import org.review_board.client.ReviewBoardException;
+import org.review_board.client.json.Repository;
+import org.review_board.client.json.Response;
 
 public class RepositoriesRequest extends ReviewBoardRequest
 {
@@ -42,21 +40,5 @@ public class RepositoriesRequest extends ReviewBoardRequest
         }
 
         return repositories;
-    }
-
-    @SuppressWarnings({"UnusedAssignment"})
-    public static void main( String[] args )
-    {
-        try
-        {
-            final ReviewBoardClient client = new ReviewBoardClient( "plumpy", "foobar",
-                "http://localhost" );
-            //noinspection UnusedDeclaration
-            final Collection<Repository> repositories = client.getRepositories();
-        }
-        catch ( ReviewBoardException e )
-        {
-            e.printStackTrace();
-        }
     }
 }
