@@ -20,7 +20,9 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.review_board.client.ReviewBoardException;
+import org.review_board.client.ReviewBoardClient;
 import org.review_board.client.json.Repository;
+import org.review_board.client.json.ReviewRequest;
 import org.review_board.idea.plugin.form.ReviewForm;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 import org.review_board.idea.plugin.repofind.RepositoryFinderTask;
@@ -119,10 +121,15 @@ class ReviewBoardCommitSession implements CommitSession
         try
         {
             checkExecute();
-            final String patch = getPatch( changes );
+
+            final ReviewRequest review = m_form.createReviewRequest();
+            review.setDiff( getPatch( changes ) );
 
             if( ReviewBoardPlugin.DEBUG )
-                System.out.println( "got patch of size " + patch.length() );
+                System.out.println( "got patch of size " + review.getDiff().length() );
+
+            final ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
+            client.newReviewRequest( review );
         }
         catch ( final Exception e )
         {

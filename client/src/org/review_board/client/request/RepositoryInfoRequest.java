@@ -18,7 +18,7 @@ public class RepositoryInfoRequest extends ReviewBoardRequest
 {
     public RepositoryInfoRequest( final String baseUrl, final int repositoryId )
     {
-        m_method = new GetMethod( baseUrl + "repositories/" + repositoryId + "/info" );
+        m_method = new GetMethod( baseUrl + "repositories/" + repositoryId + "/info/" );
     }
 
     public Map<String, String> getRepositoryInfo() throws ReviewBoardException

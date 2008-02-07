@@ -9,7 +9,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 public class LoginRequest extends ReviewBoardRequest
 {
-    public LoginRequest( final String baseUri, final String username, final String password )
+    public LoginRequest( final String baseUri, final String username,
+        final String password )
     {
         final PostMethod method = new PostMethod( baseUri + "accounts/login/" );
         method.setParameter( "username", username );

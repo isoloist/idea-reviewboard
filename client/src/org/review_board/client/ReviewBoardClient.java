@@ -8,13 +8,18 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
+import org.review_board.client.json.ReviewRequest;
 import org.review_board.client.json.User;
+import org.review_board.client.request.AttachDiffRequest;
 import org.review_board.client.request.GroupsRequest;
 import org.review_board.client.request.LoginRequest;
+import org.review_board.client.request.NewReviewRequestRequest;
+import org.review_board.client.request.PublishRequest;
 import org.review_board.client.request.RepositoriesRequest;
 import org.review_board.client.request.RepositoryInfoRequest;
 import org.review_board.client.request.RequestFactory;
 import org.review_board.client.request.ReviewBoardRequest;
+import org.review_board.client.request.SetFieldsRequest;
 import org.review_board.client.request.UsersRequest;
 
 public class ReviewBoardClient
@@ -71,6 +76,26 @@ public class ReviewBoardClient
             m_requestFactory.getRepositoryInfoRequest( repositoryId );
         processRequest( request );
         return request.getRepositoryInfo();
+    }
+
+    public void newReviewRequest( final ReviewRequest review ) throws ReviewBoardException
+    {
+        final NewReviewRequestRequest newReviewRequestRequest =
+            m_requestFactory.getNewReviewRequestRequest( review.getRepository().getId() );
+        processRequest( newReviewRequestRequest );
+        final int reviewRequestId = newReviewRequestRequest.getReviewId();
+
+        final SetFieldsRequest setFields =
+            m_requestFactory.getSetFieldsRequest( reviewRequestId, review );
+        processRequest( setFields );
+
+        final AttachDiffRequest attachDiff =
+            m_requestFactory.getAttachDiffRequest( reviewRequestId, review );
+        processRequest( attachDiff );
+
+        final PublishRequest publish =
+            m_requestFactory.getPublishRequest( reviewRequestId );
+        processRequest( publish );
     }
 
     public void login() throws ReviewBoardException

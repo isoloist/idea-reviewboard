@@ -5,37 +5,63 @@
 */
 package org.review_board.client.request;
 
+import org.review_board.client.json.ReviewRequest;
+
 public class RequestFactory
 {
     private final String m_baseUri;
+    private final String m_jsonBase;
 
     public RequestFactory( String baseUri )
     {
-        m_baseUri = baseUri + "/api/json/";
+        m_baseUri = baseUri;
+        m_jsonBase = baseUri + "/api/json/";
+    }
+
+    public AttachDiffRequest getAttachDiffRequest( final int reviewRequestId,
+        final ReviewRequest review )
+    {
+        return new AttachDiffRequest( m_jsonBase, reviewRequestId, review );
     }
 
     public GroupsRequest getGroupsRequest()
     {
-        return new GroupsRequest( m_baseUri );
+        return new GroupsRequest( m_jsonBase );
     }
 
     public LoginRequest getLoginRequest( final String username, final String password )
     {
-        return new LoginRequest( m_baseUri, username, password );
+        return new LoginRequest( m_jsonBase, username, password );
+    }
+
+    public NewReviewRequestRequest getNewReviewRequestRequest( final int repositoryId )
+    {
+        return new NewReviewRequestRequest( m_jsonBase, repositoryId );
+    }
+
+    public PublishRequest getPublishRequest( final int reviewRequestId )
+    {
+        return new PublishRequest( m_baseUri, reviewRequestId );
     }
 
     public RepositoriesRequest getRepositoriesRequest()
     {
-        return new RepositoriesRequest( m_baseUri );
+        return new RepositoriesRequest( m_jsonBase );
     }
 
     public RepositoryInfoRequest getRepositoryInfoRequest( final int repositoryId )
     {
-        return new RepositoryInfoRequest( m_baseUri, repositoryId );
+        return new RepositoryInfoRequest( m_jsonBase, repositoryId );
+    }
+
+    public SetFieldsRequest getSetFieldsRequest( final int reviewRequestId,
+        final ReviewRequest review )
+    {
+        return new SetFieldsRequest( m_jsonBase, reviewRequestId, review );
     }
 
     public UsersRequest getUsersRequest()
     {
-        return new UsersRequest( m_baseUri );
+        return new UsersRequest( m_jsonBase );
     }
 }
