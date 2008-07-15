@@ -52,6 +52,11 @@ class ReviewBoardCommitSession implements CommitSession
     public JComponent getAdditionalConfigurationUI( Collection<Change> changes,
         String commitMessage )
     {
+        if( ReviewBoardPlugin.showErrorIfUnconfigured( m_project ) )
+        {
+            return null;
+        }
+
         if ( m_form == null )
         {
             final RepositoryFinderTask task = new RepositoryFinderTask( m_project );
@@ -118,6 +123,10 @@ class ReviewBoardCommitSession implements CommitSession
     /** {@inheritDoc} */
     public void execute( final Collection<Change> changes, final String commitMessage )
     {
+        // We already popped up the error in getAdditionalConfigurationUI()
+        if( !ReviewBoardPlugin.isConfigured( m_project ) )
+            return;
+        
         try
         {
             checkExecute();

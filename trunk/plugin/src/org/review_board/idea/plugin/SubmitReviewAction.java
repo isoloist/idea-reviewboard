@@ -23,4 +23,12 @@ public class SubmitReviewAction extends AbstractCommitChangesAction
     {
         return ReviewBoardCommitExecutor.getInstance( project );
     }
+
+    public void actionPerformed( final VcsContext vcsContext )
+    {
+        if( !ReviewBoardPlugin.showErrorIfUnconfigured( vcsContext.getProject() ) )
+        {
+            super.actionPerformed( vcsContext );
+        }
+    }
 }
