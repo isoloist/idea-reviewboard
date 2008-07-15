@@ -27,7 +27,8 @@ public class ProjectSettings implements PersistentStateComponent<ProjectSettings
     @NotNull
     public String getServerUrl()
     {
-        return m_serverUrl;
+        // Remove whitespace and then remove all trailing slashes.
+        return m_serverUrl.trim().replaceFirst( "/*$", "" );
     }
 
     public void setServerUrl( @NotNull String serverUrl )
