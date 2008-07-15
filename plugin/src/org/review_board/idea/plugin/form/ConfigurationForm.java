@@ -3,6 +3,7 @@ package org.review_board.idea.plugin.form;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import org.review_board.idea.plugin.settings.ProjectSettings;
 import org.review_board.idea.plugin.settings.UserSettings;
 
@@ -12,7 +13,7 @@ public class ConfigurationForm
 
     private JTextField m_username;
 
-    private JTextField m_password;
+    private JPasswordField m_password;
 
     private JPanel m_rootComponent;
 
@@ -43,7 +44,7 @@ public class ConfigurationForm
     {
         m_projectSettings.setServerUrl( m_serverUrl.getText() );
         m_userSettings.setUsername( m_username.getText() );
-        m_userSettings.setPassword( m_password.getText() );
+        m_userSettings.setPassword( new String( m_password.getPassword() ) );
     }
 
     @SuppressWarnings({"RedundantIfStatement"})
@@ -53,7 +54,8 @@ public class ConfigurationForm
             return true;
         if( !equals( m_username.getText(), m_userSettings.getUsername() ) )
             return true;
-        if( !equals( m_password.getText(), m_userSettings.getPassword() ) )
+        if ( !equals( new String( m_password.getPassword() ),
+            m_userSettings.getPassword() ) )
             return true;
 
         return false;
