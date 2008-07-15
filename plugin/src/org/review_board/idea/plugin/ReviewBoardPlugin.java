@@ -7,6 +7,8 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -155,5 +157,60 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
     public void loadState( final ReviewBoardPlugin state )
     {
         XmlSerializerUtil.copyBean( state, this );
+    }
+
+    public UserSettings getUserSettings()
+    {
+        return m_userSettings;
+    }
+
+    public ProjectSettings getProjectSettings()
+    {
+        return m_projectSettings;
+    }
+
+    /**
+     * Return whether or not the URL, username, and password have been set for Review
+     * Board on this project.
+     * @param project the project
+     * @return whether or not the fields have been set
+     */
+    public static boolean isConfigured( final Project project )
+    {
+        final ReviewBoardPlugin plugin = ReviewBoardPlugin.getInstance( project );
+        final ProjectSettings proj = plugin.getProjectSettings();
+        final UserSettings user = plugin.getUserSettings();
+
+        return !("".equals( proj.getServerUrl() )
+            || "".equals( user.getUsername().trim() )
+            || "".equals( user.getPassword().trim() ));
+    }
+
+    /**
+     * Show the user an error dialog if the URL, username, or password are unconfigured
+     * in the Review Board settings.
+     * @param project the project to check for settings
+     * @return whether or not an error dialog was shown
+     */
+    public static boolean showErrorIfUnconfigured( final Project project )
+    {
+        if ( isConfigured( project ) )
+        {
+            return false;
+        }
+        else
+        {
+            ApplicationManager.getApplication().invokeLater( new Runnable()
+            {
+                public void run()
+                {
+                    Messages.showErrorDialog( project,
+                        "You must configure the Review Board plugin in the "
+                            + "\"Review Board\" section of the Project settings.",
+                        "Review Board plugin isn't configured!" );
+                }
+            } );
+            return true;
+        }
     }
 }
