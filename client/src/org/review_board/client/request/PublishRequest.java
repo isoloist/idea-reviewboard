@@ -13,6 +13,6 @@ public class PublishRequest extends ReviewBoardRequest
     public PublishRequest( final String baseUri, final int reviewRequestId )
     {
         m_method = new PostMethod(
-            baseUri + "r/" + reviewRequestId + "/publish/" );
+            baseUri + "reviewrequests/" + reviewRequestId + "/publish/" );
     }
 }

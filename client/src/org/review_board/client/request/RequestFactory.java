@@ -41,7 +41,7 @@ public class RequestFactory
 
     public PublishRequest getPublishRequest( final int reviewRequestId )
     {
-        return new PublishRequest( m_baseUri, reviewRequestId );
+        return new PublishRequest( m_jsonBase, reviewRequestId );
     }
 
     public RepositoriesRequest getRepositoriesRequest()
