@@ -210,7 +210,9 @@
             <children>
               <component id="4d96" class="javax.swing.JTextArea" binding="m_testingDone">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <lineWrap value="true"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

@@ -2,7 +2,7 @@
 <idea-plugin>
     <name>Review Board</name>
     <description>provides integration with Review Board (www.review-board.org)</description>
-    <version>0.0</version>
+    <version>0.9</version>
     <vendor>Skylab Heavy Industries</vendor>
     <depends optional="true">Subversion</depends>
     <actions>
