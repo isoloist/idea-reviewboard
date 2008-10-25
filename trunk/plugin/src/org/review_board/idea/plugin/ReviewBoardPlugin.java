@@ -25,10 +25,10 @@ import org.review_board.idea.plugin.settings.UserSettings;
 @State(
     name = "ReviewBoard",
     storages = {
-    @Storage(
-        id = "other",
-        file = "$WORKSPACE_FILE$"
-    )}
+        @Storage(
+            id = "other",
+            file = "$WORKSPACE_FILE$"
+        )}
 )
 public class ReviewBoardPlugin implements ProjectComponent, Configurable
 {
@@ -125,9 +125,9 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         m_client.setPassword( m_userSettings.getPassword() );
         m_client.setUri( url );
 
-        if( StringUtil.isEmptyOrSpaces( url ) )
+        if ( StringUtil.isEmptyOrSpaces( url ) )
             return;
-        
+
         try
         {
             m_client.login();
@@ -200,17 +200,23 @@ public class ReviewBoardPlugin implements ProjectComponent, Configurable
         }
         else
         {
-            ApplicationManager.getApplication().invokeLater( new Runnable()
-            {
-                public void run()
-                {
-                    Messages.showErrorDialog( project,
-                        "You must configure the Review Board plugin in the "
-                            + "\"Review Board\" section of the Project settings.",
-                        "Review Board plugin isn't configured!" );
-                }
-            } );
+            showErrorDialog( project,
+                "You must configure the Review Board plugin in the "
+                    + "\"Review Board\" section of the Project settings.",
+                "Review Board plugin isn't configured!" );
             return true;
         }
+    }
+
+    public static void showErrorDialog( final Project project, final String message,
+        final String title )
+    {
+        ApplicationManager.getApplication().invokeLater( new Runnable()
+        {
+            public void run()
+            {
+                Messages.showErrorDialog( project, message, title );
+            }
+        } );
     }
 }

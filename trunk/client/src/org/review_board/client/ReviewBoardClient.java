@@ -21,6 +21,7 @@ import org.review_board.client.request.RequestFactory;
 import org.review_board.client.request.ReviewBoardRequest;
 import org.review_board.client.request.SetFieldsRequest;
 import org.review_board.client.request.UsersRequest;
+import org.review_board.client.request.DeleteReviewRequestRequest;
 
 public class ReviewBoardClient
 {
@@ -78,24 +79,47 @@ public class ReviewBoardClient
         return request.getRepositoryInfo();
     }
 
-    public void newReviewRequest( final ReviewRequest review ) throws ReviewBoardException
+    public int newReviewRequest( final ReviewRequest review, final boolean publish )
+        throws ReviewBoardException
     {
         final NewReviewRequestRequest newReviewRequestRequest =
             m_requestFactory.getNewReviewRequestRequest( review.getRepository().getId() );
         processRequest( newReviewRequestRequest );
         final int reviewRequestId = newReviewRequestRequest.getReviewId();
 
-        final SetFieldsRequest setFields =
-            m_requestFactory.getSetFieldsRequest( reviewRequestId, review );
-        processRequest( setFields );
+        try
+        {
+            final SetFieldsRequest setFields =
+                m_requestFactory.getSetFieldsRequest( reviewRequestId, review );
+            processRequest( setFields );
 
-        final AttachDiffRequest attachDiff =
-            m_requestFactory.getAttachDiffRequest( reviewRequestId, review );
-        processRequest( attachDiff );
+            final AttachDiffRequest attachDiff =
+                m_requestFactory.getAttachDiffRequest( reviewRequestId, review );
+            processRequest( attachDiff );
 
-        final PublishRequest publish =
-            m_requestFactory.getPublishRequest( reviewRequestId );
-        processRequest( publish );
+            if( publish )
+            {
+                final PublishRequest publishRequest =
+                    m_requestFactory.getPublishRequest( reviewRequestId );
+                processRequest( publishRequest );
+            }
+
+            return reviewRequestId;
+        }
+        catch( ReviewBoardException createException )
+        {
+            try
+            {
+                final DeleteReviewRequestRequest delete =
+                    m_requestFactory.getDeleteReviewRequestRequest( reviewRequestId );
+                processRequest( delete );
+            }
+            catch( ReviewBoardException deleteException )
+            {
+                // Forget it. We want to throw the outer exception anyway.
+            }
+            throw createException;
+        }
     }
 
     public void login() throws ReviewBoardException

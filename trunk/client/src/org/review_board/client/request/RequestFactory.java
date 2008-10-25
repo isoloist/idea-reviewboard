@@ -9,12 +9,10 @@ import org.review_board.client.json.ReviewRequest;
 
 public class RequestFactory
 {
-    private final String m_baseUri;
     private final String m_jsonBase;
 
     public RequestFactory( String baseUri )
     {
-        m_baseUri = baseUri;
         m_jsonBase = baseUri + "/api/json/";
     }
 
@@ -42,6 +40,12 @@ public class RequestFactory
     public PublishRequest getPublishRequest( final int reviewRequestId )
     {
         return new PublishRequest( m_jsonBase, reviewRequestId );
+    }
+
+    public DeleteReviewRequestRequest getDeleteReviewRequestRequest(
+        final int reviewRequestId )
+    {
+        return new DeleteReviewRequestRequest( m_jsonBase, reviewRequestId );
     }
 
     public RepositoriesRequest getRepositoriesRequest()

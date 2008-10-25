@@ -12,6 +12,7 @@ import com.intellij.openapi.vcs.changes.CommitSession;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.ide.BrowserUtil;
 import java.io.StringWriter;
 import java.io.IOException;
 import java.util.Collection;
@@ -33,6 +34,8 @@ class ReviewBoardCommitSession implements CommitSession
     private final Project m_project;
 
     private ReviewForm m_form;
+
+    private boolean m_errorFindingRepositories = false;
 
     public ReviewBoardCommitSession( @NotNull final Project project )
     {
@@ -63,24 +66,28 @@ class ReviewBoardCommitSession implements CommitSession
             final ProgressManager progressManager = ProgressManager.getInstance();
             progressManager.run( task );
 
-            Collection<Repository> repositories = null;
-            RepositoryFinder.FoundRepositoryInfo repoinfo = null;
+            final Collection<Repository> repositories;
+            final RepositoryFinder.FoundRepositoryInfo repoinfo;
             try
             {
                 repositories = task.getRepositories();
                 repoinfo = task.getResult();
             }
-            catch ( ReviewBoardException e )
+            catch( ReviewBoardException e )
             {
-                e.printStackTrace();
+                ReviewBoardPlugin.showErrorDialog( m_project, e.getMessage(),
+                    "Error retrieving repositories" );
+                m_errorFindingRepositories = true;
+                return null;
             }
-            if ( repositories == null )
-            {
-                return null; // OHFUCKY
-            }
+
             if ( repositories.size() == 0 )
             {
-                return null; // FUCKY HERE TOO
+                ReviewBoardPlugin.showErrorDialog( m_project,
+                    "No repositories are configured on the Review Board server",
+                    "Error retrieving repositories" );
+                m_errorFindingRepositories = true;
+                return null;
             }
 
             m_form = new ReviewForm();
@@ -123,8 +130,8 @@ class ReviewBoardCommitSession implements CommitSession
     /** {@inheritDoc} */
     public void execute( final Collection<Change> changes, final String commitMessage )
     {
-        // We already popped up the error in getAdditionalConfigurationUI()
-        if( !ReviewBoardPlugin.isConfigured( m_project ) )
+        // We already popped an error in getAdditionalConfigurationUI()
+        if( !ReviewBoardPlugin.isConfigured( m_project ) || m_errorFindingRepositories )
             return;
         
         try
@@ -138,7 +145,14 @@ class ReviewBoardCommitSession implements CommitSession
                 System.out.println( "got patch of size " + review.getDiff().length() );
 
             final ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
-            client.newReviewRequest( review );
+            final int reviewRequestId =
+                client.newReviewRequest( review, m_form.publishReviewRequest() );
+
+            if( m_form.openInWebBrowser() )
+            {
+                BrowserUtil.launchBrowser(
+                    client.getUri() + "/r/" + reviewRequestId + "/" );
+            }
         }
         catch ( final Exception e )
         {

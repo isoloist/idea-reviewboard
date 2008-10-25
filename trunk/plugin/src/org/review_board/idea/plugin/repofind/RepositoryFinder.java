@@ -31,6 +31,10 @@ public interface RepositoryFinder
 
         public String getBaseDiffPath()
         {
+            // Review Board hates it if you give it an empty base diff path.
+            if( m_baseDiffPath.equals( "" ) )
+                return "/";
+            
             return m_baseDiffPath;
         }
 
