@@ -10,8 +10,10 @@ package org.review_board.idea.plugin.form;
 
 import com.intellij.openapi.util.text.StringUtil;
 import java.util.Collection;
-import java.util.Collections;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -54,6 +56,10 @@ public class ReviewForm
 
     private JPanel m_repositoryPanel;
 
+    private JCheckBox m_publishReviewRequest;
+
+    private JCheckBox m_openInWebBrowser;
+
     public ReviewForm()
     {
         m_repositoryPanel.setBorder( BorderFactory.createTitledBorder( "Repository" ) );
@@ -61,6 +67,21 @@ public class ReviewForm
         m_infoPanel.setBorder( BorderFactory.createTitledBorder( "Info" ) );
         m_summary
             .setDocument( new SizeLimitedDocument( ServerConstants.MAX_SUMMARY_LENGTH ) );
+        m_publishReviewRequest.getModel().setSelected( true );
+
+        // If the user unchecks the "publish" checkbox, we'll default to opening it in a
+        // web browser (since they probably want to make some changes and then publish
+        // it).
+        m_publishReviewRequest.getModel().addActionListener( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent e )
+            {
+                if( !m_publishReviewRequest.getModel().isSelected() )
+                {
+                    m_openInWebBrowser.getModel().setSelected( true );
+                }
+            }
+        } );
     }
 
     public JPanel getRootComponent()
@@ -123,6 +144,16 @@ public class ReviewForm
     public String getTestingDone()
     {
         return m_testingDone.getText();
+    }
+
+    public boolean publishReviewRequest()
+    {
+        return m_publishReviewRequest.getModel().isSelected();
+    }
+
+    public boolean openInWebBrowser()
+    {
+        return m_openInWebBrowser.getModel().isSelected();
     }
 
     public void setRepositories( @NotNull final Collection<Repository> repositories,

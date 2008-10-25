@@ -10,6 +10,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.review_board.client.ReviewBoardClient;
 import org.review_board.client.ReviewBoardException;
 import org.review_board.client.json.Repository;
@@ -20,6 +21,8 @@ public class RepositoryFinderTask extends Task.Modal
     private final Project m_project;
 
     private boolean m_finished = false;
+
+    private ReviewBoardException m_error;
 
     private Collection<Repository> m_repositories;
 
@@ -39,26 +42,26 @@ public class RepositoryFinderTask extends Task.Modal
         m_result = null;
         try
         {
-            indicator.setText( "Determining repository...");
+            indicator.setText( "Determining repository..." );
 
             ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
 
             indicator.setText2( "Getting list of repositories on server" );
-            if( indicator.isCanceled() )
+            if ( indicator.isCanceled() )
                 return;
-            
+
             m_repositories = client.getRepositories();
 
             RepositoryFinder repofinder =
                 RepositoryFinderFactory.getInstance().getRepositoryFinder( m_project );
-            if( repofinder == null )
+            if ( repofinder == null )
                 return;
 
             m_result = repofinder.findRepository( m_repositories, indicator );
         }
         catch ( ReviewBoardException e )
         {
-            e.printStackTrace();
+            m_error = e;
         }
         finally
         {
@@ -66,20 +69,32 @@ public class RepositoryFinderTask extends Task.Modal
         }
     }
 
-    @Nullable
+    @NotNull
     public RepositoryFinder.FoundRepositoryInfo getResult() throws ReviewBoardException
     {
-        if( !m_finished )
-            throw new ReviewBoardException( "can't get result because it's not done!" );
+        if ( !m_finished )
+        {
+            throw new IllegalStateException(
+                "can't get result because task isn't finished!" );
+        }
+
+        if( m_error != null )
+            throw m_error;
 
         return m_result;
     }
 
-    @Nullable
+    @NotNull
     public Collection<Repository> getRepositories() throws ReviewBoardException
     {
-        if( !m_finished )
-            throw new ReviewBoardException( "can't get result because it's not done!" );
+        if ( !m_finished )
+        {
+            throw new IllegalStateException(
+                "can't get repositories because task isn't finished!" );
+        }
+
+        if( m_error != null )
+            throw m_error;
 
         return m_repositories;
     }
