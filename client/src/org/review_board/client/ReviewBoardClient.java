@@ -3,13 +3,15 @@ package org.review_board.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.review_board.client.json.Group;
 import org.review_board.client.json.Repository;
 import org.review_board.client.json.Response;
-import org.review_board.client.json.ReviewRequest;
 import org.review_board.client.json.User;
+import org.review_board.client.json.ReviewRequest;
+import org.review_board.client.json.ReviewRequestDraft;
 import org.review_board.client.request.AttachDiffRequest;
 import org.review_board.client.request.GroupsRequest;
 import org.review_board.client.request.LoginRequest;
@@ -22,6 +24,8 @@ import org.review_board.client.request.ReviewBoardRequest;
 import org.review_board.client.request.SetFieldsRequest;
 import org.review_board.client.request.UsersRequest;
 import org.review_board.client.request.DeleteReviewRequestRequest;
+import org.review_board.client.request.ReviewRequestsRequest;
+import org.review_board.client.request.ReviewRequestDraftRequest;
 
 public class ReviewBoardClient
 {
@@ -49,18 +53,52 @@ public class ReviewBoardClient
         m_requestFactory = new RequestFactory( uri );
     }
 
-    public ArrayList<User> getUsers() throws ReviewBoardException
+    public List<User> getUsers() throws ReviewBoardException
     {
         final UsersRequest request = m_requestFactory.getUsersRequest();
         processRequest( request );
         return request.getUsers();
     }
 
-    public ArrayList<Group> getGroups() throws ReviewBoardException
+    public List<Group> getGroups() throws ReviewBoardException
     {
         final GroupsRequest request = m_requestFactory.getGroupsRequest();
         processRequest( request );
         return request.getGroups();
+    }
+
+    public List<ReviewRequest> getReviewRequests(
+        final ReviewRequestsRequest.GetType type, final String argument )
+        throws ReviewBoardException
+    {
+        final ReviewRequestsRequest request =
+            m_requestFactory.getReviewRequestsRequest( type, argument );
+        processRequest( request );
+        return request.getReviewRequests();
+    }
+
+    public ReviewRequestDraft getReviewRequestDraft( final int reviewRequestId )
+        throws ReviewBoardException
+    {
+        final ReviewRequestDraftRequest request =
+            m_requestFactory.getReviewRequestDraftRequest( reviewRequestId );
+        return processReviewRequestDraftRequest( request );
+    }
+
+    private ReviewRequestDraft processReviewRequestDraftRequest(
+        final ReviewRequestDraftRequest request ) throws ReviewBoardException
+    {
+        final Response response = processRequest( request, true );
+
+        // We don't mind a "Does not exist" error. We were just checking anyway, okay?
+        if( response.isFailure() && response.isDoesNotExistFailure() )
+        {
+            return null;
+        }
+
+        throwOnFailure( response );
+
+        return request.getDraft();
     }
 
     public ArrayList<Repository> getRepositories() throws ReviewBoardException
@@ -79,8 +117,8 @@ public class ReviewBoardClient
         return request.getRepositoryInfo();
     }
 
-    public int newReviewRequest( final ReviewRequest review, final boolean publish )
-        throws ReviewBoardException
+    public int newReviewRequest( final SetFieldsRequest.ReviewRequestData review,
+        final boolean publish ) throws ReviewBoardException
     {
         final NewReviewRequestRequest newReviewRequestRequest =
             m_requestFactory.getNewReviewRequestRequest( review.getRepository().getId() );
@@ -89,20 +127,7 @@ public class ReviewBoardClient
 
         try
         {
-            final SetFieldsRequest setFields =
-                m_requestFactory.getSetFieldsRequest( reviewRequestId, review );
-            processRequest( setFields );
-
-            final AttachDiffRequest attachDiff =
-                m_requestFactory.getAttachDiffRequest( reviewRequestId, review );
-            processRequest( attachDiff );
-
-            if( publish )
-            {
-                final PublishRequest publishRequest =
-                    m_requestFactory.getPublishRequest( reviewRequestId );
-                processRequest( publishRequest );
-            }
+            updateExistingReviewRequest( reviewRequestId, review, publish );
 
             return reviewRequestId;
         }
@@ -122,32 +147,63 @@ public class ReviewBoardClient
         }
     }
 
+    public void updateExistingReviewRequest( int reviewRequestId,
+        SetFieldsRequest.ReviewRequestData review, boolean publish )
+        throws ReviewBoardException
+    {
+        final SetFieldsRequest setFields =
+            m_requestFactory.getSetFieldsRequest( reviewRequestId, review );
+        processRequest( setFields );
+
+        final AttachDiffRequest attachDiff =
+            m_requestFactory.getAttachDiffRequest( reviewRequestId, review );
+        processRequest( attachDiff );
+
+        if( publish )
+        {
+            final PublishRequest publishRequest =
+                m_requestFactory.getPublishRequest( reviewRequestId );
+            processRequest( publishRequest );
+        }
+    }
+
     public void login() throws ReviewBoardException
     {
         final LoginRequest request =
             m_requestFactory.getLoginRequest( m_username, m_password );
-        processRequest( request );
+        throwOnFailure( processRequest( request, false ) );
     }
 
     private void processRequest( final ReviewBoardRequest request )
         throws ReviewBoardException
     {
+        throwOnFailure( processRequest( request, true ) );
+    }
+
+    private void throwOnFailure( Response response ) throws ReviewBoardException
+    {
+        if( response.isFailure() )
+        {
+            throw new ReviewBoardException(
+                "Error from server: " + response.getErrorMessage() );
+        }
+    }
+
+    private Response processRequest( final ReviewBoardRequest request,
+        final boolean tryLoggingIn ) throws ReviewBoardException
+    {
         try
         {
             final Response response = request.execute( m_httpClient );
 
-            if ( response.isFailure() )
+            if( response.isFailure() && response.isNotLoggedInFailure() && tryLoggingIn )
             {
-                if ( response.isNotLoggedInFailure() )
-                {
-                    login();
-                    processRequest( request );
-                }
-                else
-                {
-                    throw new ReviewBoardException(
-                        "Error from server: " + response.getErrorMessage() );
-                }
+                login();
+                return processRequest( request, false );
+            }
+            else
+            {
+                return response;
             }
         }
         catch ( IOException e )

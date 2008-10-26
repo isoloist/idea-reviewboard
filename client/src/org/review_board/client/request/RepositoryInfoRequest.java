@@ -26,7 +26,7 @@ public class RepositoryInfoRequest extends ReviewBoardRequest
         final Response response = getResponse();
 
         final Map<String, String> info = new HashMap<String, String>();
-        JSONObject json = (JSONObject)response.get( "info" );
+        JSONObject json = response.getJSONObject( "info" );
         for( Iterator iter =  json.keys(); iter.hasNext(); )
         {
             final String key = (String)iter.next();

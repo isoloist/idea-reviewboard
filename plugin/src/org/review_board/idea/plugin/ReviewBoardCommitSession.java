@@ -11,7 +11,6 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.ide.BrowserUtil;
 import java.io.StringWriter;
 import java.io.IOException;
@@ -22,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.review_board.client.ReviewBoardException;
 import org.review_board.client.ReviewBoardClient;
+import org.review_board.client.request.SetFieldsRequest;
 import org.review_board.client.json.Repository;
-import org.review_board.client.json.ReviewRequest;
 import org.review_board.idea.plugin.form.ReviewForm;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 import org.review_board.idea.plugin.repofind.RepositoryFinderTask;
@@ -90,7 +89,7 @@ class ReviewBoardCommitSession implements CommitSession
                 return null;
             }
 
-            m_form = new ReviewForm();
+            m_form = new ReviewForm( m_project );
             m_form.setCommitMessage( commitMessage );
 
             m_form.setRepositories( repositories, repoinfo );
@@ -138,17 +137,29 @@ class ReviewBoardCommitSession implements CommitSession
         {
             checkExecute();
 
-            final ReviewRequest review = m_form.createReviewRequest();
+            final SetFieldsRequest.ReviewRequestData review =
+                m_form.createReviewRequestData();
             review.setDiff( getPatch( changes ) );
 
             if( ReviewBoardPlugin.DEBUG )
                 System.out.println( "got patch of size " + review.getDiff().length() );
 
             final ReviewBoardClient client = ReviewBoardPlugin.getClient( m_project );
-            final int reviewRequestId =
-                client.newReviewRequest( review, m_form.publishReviewRequest() );
 
-            if( m_form.openInWebBrowser() )
+            final boolean publish = m_form.publishReviewRequest();
+            final int reviewRequestId;
+            
+            if( m_form.updateExistingReviewRequest() )
+            {
+                reviewRequestId = m_form.getExistingReviewRequest().getReviewRequestId();
+                client.updateExistingReviewRequest( reviewRequestId, review, publish );
+            }
+            else
+            {
+                reviewRequestId = client.newReviewRequest( review, publish );
+            }
+
+            if ( m_form.openInWebBrowser() )
             {
                 BrowserUtil.launchBrowser(
                     client.getUri() + "/r/" + reviewRequestId + "/" );

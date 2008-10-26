@@ -5,8 +5,6 @@
 */
 package org.review_board.client.request;
 
-import org.review_board.client.json.ReviewRequest;
-
 public class RequestFactory
 {
     private final String m_jsonBase;
@@ -17,9 +15,15 @@ public class RequestFactory
     }
 
     public AttachDiffRequest getAttachDiffRequest( final int reviewRequestId,
-        final ReviewRequest review )
+        final SetFieldsRequest.ReviewRequestData review )
     {
         return new AttachDiffRequest( m_jsonBase, reviewRequestId, review );
+    }
+
+    public DeleteReviewRequestRequest getDeleteReviewRequestRequest(
+        final int reviewRequestId )
+    {
+        return new DeleteReviewRequestRequest( m_jsonBase, reviewRequestId );
     }
 
     public GroupsRequest getGroupsRequest()
@@ -42,12 +46,6 @@ public class RequestFactory
         return new PublishRequest( m_jsonBase, reviewRequestId );
     }
 
-    public DeleteReviewRequestRequest getDeleteReviewRequestRequest(
-        final int reviewRequestId )
-    {
-        return new DeleteReviewRequestRequest( m_jsonBase, reviewRequestId );
-    }
-
     public RepositoriesRequest getRepositoriesRequest()
     {
         return new RepositoriesRequest( m_jsonBase );
@@ -58,8 +56,20 @@ public class RequestFactory
         return new RepositoryInfoRequest( m_jsonBase, repositoryId );
     }
 
+    public ReviewRequestDraftRequest getReviewRequestDraftRequest(
+        final int reviewRequestId )
+    {
+        return new ReviewRequestDraftRequest( m_jsonBase, reviewRequestId );
+    }
+
+    public ReviewRequestsRequest getReviewRequestsRequest(
+        final ReviewRequestsRequest.GetType type, final String argument )
+    {
+        return new ReviewRequestsRequest( m_jsonBase, type, argument );
+    }
+
     public SetFieldsRequest getSetFieldsRequest( final int reviewRequestId,
-        final ReviewRequest review )
+        final SetFieldsRequest.ReviewRequestData review )
     {
         return new SetFieldsRequest( m_jsonBase, reviewRequestId, review );
     }

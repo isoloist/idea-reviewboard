@@ -23,7 +23,7 @@ public class RepositoriesRequest extends ReviewBoardRequest
     public ArrayList<Repository> getRepositories() throws ReviewBoardException
     {
         final Response response = getResponse();
-        final JSONArray array = (JSONArray)response.get( "repositories" );
+        final JSONArray array = response.getJSONArray( "repositories" );
 
         final ArrayList<Repository> repositories = new ArrayList<Repository>();
 
