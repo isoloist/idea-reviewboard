@@ -2,8 +2,8 @@ package org.review_board.idea.plugin;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
-import com.intellij.openapi.diff.impl.patch.PatchBuilder;
 import com.intellij.openapi.diff.impl.patch.UnifiedDiffWriter;
+import com.intellij.openapi.diff.impl.patch.PatchBuilder;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -172,6 +172,7 @@ class ReviewBoardCommitSession implements CommitSession
         throws ReviewBoardException, VcsException, IOException
     {
         VirtualFile baseDir = getBaseDir();
+
         // Here's some IDEA code that isn't part of openapi, but which I was
         // encouraged to use:
         //   http://www.jetbrains.net/jira/browse/IDEADEV-21340
@@ -187,13 +188,35 @@ class ReviewBoardCommitSession implements CommitSession
         //
         // The fourth argument tells it whether or not to reverse the order of the
         // patch.
-        final List<FilePatch> patches = PatchBuilder
-            .buildPatch( changes, baseDir.getPresentableUrl(), false, false );
+        final List<FilePatch> patches =
+            PatchBuilder.buildPatch( changes, baseDir.getPresentableUrl(), true, false );
+
+        fixRevisionMarkers( patches );
+
         final StringWriter writer = new StringWriter( 2048 );
-        final String linebreak = CodeStyleSettingsManager.getInstance( m_project )
-            .getCurrentSettings().getLineSeparator();
-        UnifiedDiffWriter.write( patches, writer, linebreak );
+        UnifiedDiffWriter.write( patches, writer, "\n" ); // more non-openAPI code
         return writer.toString();
+    }
+
+    private void fixRevisionMarkers( List<FilePatch> patches )
+    {
+        for( FilePatch patch : patches )
+        {
+            if( !patch.getBeforeVersionId().startsWith( "(" ) )
+            {
+                // If the "before" version isn't a revision number, then this is an added
+                // file. In SVN diff, those get marked as revision 0.
+                patch.setBeforeVersionId( "(revision 0)" );
+                patch.setAfterVersionId( "(revision 0)" );
+            }
+            else if( !patch.getAfterVersionId().startsWith( "(" ) )
+            {
+                // Any other non-revision string is a date in IntelliJ but shows up as
+                // "(working copy)" in SVN diffs. Review Board actually handles that fine,
+                // but as long as we're hacking up the patch, let's fix it.
+                patch.setAfterVersionId( "(working copy)" );
+            }
+        }
     }
 
     private VirtualFile getBaseDir() throws ReviewBoardException
