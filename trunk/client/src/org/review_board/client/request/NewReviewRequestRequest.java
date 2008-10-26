@@ -9,6 +9,7 @@ package org.review_board.client.request;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.review_board.client.ReviewBoardException;
 import org.review_board.client.json.Response;
+import org.review_board.client.json.Repository;
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -26,7 +27,7 @@ public class NewReviewRequestRequest extends ReviewBoardRequest
         try
         {
             final Response response = getResponse();
-            final JSONObject reviewRequest = (JSONObject)response.get( "review_request" );
+            final JSONObject reviewRequest = response.getJSONObject( "review_request" );
             return reviewRequest.getInt( "id" );
         }
         catch ( JSONException e )

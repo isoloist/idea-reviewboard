@@ -24,10 +24,10 @@ public class Repository extends AbstractReviewBoardObject
     public Repository( final JSONObject jsonObject ) throws ReviewBoardException
     {
         super( jsonObject );
-        m_id = (Integer)get( ID_KEY );
-        m_path = (String)get( PATH_KEY );
-        m_name = (String)get( NAME_KEY );
-        m_tool = (String)get( TOOL_KEY );
+        m_id = getInt( ID_KEY );
+        m_path = getString( PATH_KEY );
+        m_name = getString( NAME_KEY );
+        m_tool = getString( TOOL_KEY );
     }
 
     public int getId()

@@ -13,12 +13,11 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.review_board.client.json.ReviewRequest;
 
 public class AttachDiffRequest extends ReviewBoardRequest
 {
     public AttachDiffRequest( final String baseUrl, final int reviewRequestId,
-        final ReviewRequest review )
+        final SetFieldsRequest.ReviewRequestData review )
     {
         final String baseDir = review.getBaseDiffPath();
         final String diff = review.getDiff();

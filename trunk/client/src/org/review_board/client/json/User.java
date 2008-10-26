@@ -15,14 +15,13 @@ public class User extends AbstractReviewBoardObject
 
     private final String m_firstName;
 
-    private final String m_lastName;
+    private final String m_lastName = (String)getString( LAST_NAME_KEY );
 
     public User( final JSONObject object ) throws ReviewBoardException
     {
         super( object );
-        m_username = (String)get( USERNAME_KEY );
-        m_firstName = (String)get( FIRST_NAME_KEY );
-        m_lastName = (String)get( LAST_NAME_KEY );
+        m_username = getString( USERNAME_KEY );
+        m_firstName = getString( FIRST_NAME_KEY );
     }
 
     public String getUsername()
@@ -38,5 +37,10 @@ public class User extends AbstractReviewBoardObject
     public String getLastName()
     {
         return m_lastName;
+    }
+
+    public String toString()
+    {
+        return getUsername();
     }
 }

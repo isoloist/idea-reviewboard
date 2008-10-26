@@ -23,7 +23,7 @@ public class GroupsRequest extends ReviewBoardRequest
     public ArrayList<Group> getGroups() throws ReviewBoardException
     {
         final Response response = getResponse();
-        final JSONArray array = (JSONArray)response.get( "groups" );
+        final JSONArray array = response.getJSONArray( "groups" );
 
         final ArrayList<Group> groups = new ArrayList<Group>();
 

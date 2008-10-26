@@ -25,6 +25,7 @@ public class ReviewBoardException extends Exception
 
     public static ReviewBoardException jsonException( JSONException e )
     {
+        //noinspection ThrowableInstanceNeverThrown
         return new ReviewBoardException( "Unknown response from server", e );
     }
 }

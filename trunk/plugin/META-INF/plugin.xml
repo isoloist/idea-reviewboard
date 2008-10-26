@@ -2,7 +2,7 @@
 <idea-plugin>
     <name>Review Board</name>
     <description>provides integration with Review Board (www.review-board.org)</description>
-    <version>0.9.2</version>
+    <version>1.0</version>
     <vendor>Michael Plump</vendor>
     <depends optional="true">Subversion</depends>
     <actions>

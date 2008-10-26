@@ -23,7 +23,7 @@ public class UsersRequest extends ReviewBoardRequest
     public ArrayList<User> getUsers() throws ReviewBoardException
     {
         final Response response = getResponse();
-        final JSONArray array = (JSONArray)response.get( "users" );
+        final JSONArray array = response.getJSONArray( "users" );
 
         final ArrayList<User> users = new ArrayList<User>();
 

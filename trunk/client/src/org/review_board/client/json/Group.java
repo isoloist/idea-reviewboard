@@ -21,8 +21,8 @@ public class Group extends AbstractReviewBoardObject
     public Group( JSONObject jsonObject ) throws ReviewBoardException
     {
         super( jsonObject );
-        m_name = (String)get( NAME_KEY );
-        m_displayName = (String)get( DISPLAY_NAME_KEY );
+        m_name = getString( NAME_KEY );
+        m_displayName = getString( DISPLAY_NAME_KEY );
     }
 
     public String getName()
@@ -33,5 +33,10 @@ public class Group extends AbstractReviewBoardObject
     public String getDisplayName()
     {
         return m_displayName;
+    }
+
+    public String toString()
+    {
+        return getName();
     }
 }
