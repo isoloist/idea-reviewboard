@@ -39,7 +39,7 @@ public class ReviewRequestsTask extends Task.Modal
         m_project = project;
     }
 
-    public void run( ProgressIndicator indicator )
+    public void run( @NotNull ProgressIndicator indicator )
     {
         indicator.setIndeterminate( true );
         m_finished = false;

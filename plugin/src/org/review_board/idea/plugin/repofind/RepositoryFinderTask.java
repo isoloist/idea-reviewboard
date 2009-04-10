@@ -34,7 +34,7 @@ public class RepositoryFinderTask extends Task.Modal
         m_project = project;
     }
 
-    public void run( ProgressIndicator indicator )
+    public void run( @NotNull ProgressIndicator indicator )
     {
         indicator.setIndeterminate( true );
         m_finished = false;
@@ -69,7 +69,7 @@ public class RepositoryFinderTask extends Task.Modal
         }
     }
 
-    @NotNull
+    @Nullable
     public RepositoryFinder.FoundRepositoryInfo getResult() throws ReviewBoardException
     {
         if ( !m_finished )
