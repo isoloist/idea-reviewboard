@@ -38,7 +38,7 @@ public class RepositoryFinderFactory
         {
             return null;
         }
-        else if ( vcs instanceof SvnVcs )
+        else if ( vcs.getClass().getSimpleName().equals( "SvnVcs" ) )
         {
             return new SvnRepositoryFinder( project, (SvnVcs)vcs );
         }
