@@ -7,6 +7,7 @@ package org.review_board.idea.plugin.repofind;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,12 +26,14 @@ public class RepositoryFinderFactory
     }
 
     @Nullable
-    public RepositoryFinder getRepositoryFinder( final Project project )
+    public RepositoryFinder getRepositoryFinder( @NotNull final Project project )
     {
-        if( project == null )
+        final VirtualFile baseDir = project.getBaseDir();
+
+        if( baseDir == null )
             return null;
         
-        final AbstractVcs vcs = VcsUtil.getVcsFor( project, project.getBaseDir() );
+        final AbstractVcs vcs = VcsUtil.getVcsFor( project, baseDir );
         if ( vcs instanceof SvnVcs )
         {
             return new SvnRepositoryFinder( project, (SvnVcs)vcs );

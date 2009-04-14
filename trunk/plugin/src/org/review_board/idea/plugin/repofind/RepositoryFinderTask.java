@@ -18,6 +18,7 @@ import org.review_board.idea.plugin.ReviewBoardPlugin;
 
 public class RepositoryFinderTask extends Task.Modal
 {
+    @NotNull
     private final Project m_project;
 
     private boolean m_finished = false;
@@ -28,7 +29,7 @@ public class RepositoryFinderTask extends Task.Modal
 
     private RepositoryFinder.FoundRepositoryInfo m_result;
 
-    public RepositoryFinderTask( @Nullable Project project )
+    public RepositoryFinderTask( @NotNull Project project )
     {
         super( project, "Finding Repository...", true );
         m_project = project;
