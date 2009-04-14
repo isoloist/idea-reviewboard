@@ -436,5 +436,8 @@
       </value>
     </option>
   </component>
+  <UsedPathMacros>
+    <macro name="user.home" description="" />
+  </UsedPathMacros>
 </project>
 
