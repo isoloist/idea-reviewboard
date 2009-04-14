@@ -51,7 +51,13 @@ public class RepositoryFinderTask extends Task.Modal
             if ( indicator.isCanceled() )
                 return;
 
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "Getting repository list from server." );
+
             m_repositories = client.getRepositories();
+
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "Retrieved repository list from server." );
 
             RepositoryFinder repofinder =
                 RepositoryFinderFactory.getInstance().getRepositoryFinder( m_project );

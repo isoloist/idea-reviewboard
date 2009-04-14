@@ -25,6 +25,7 @@ import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathExpressionException;
 import org.jetbrains.annotations.NotNull;
 import org.review_board.client.json.Repository;
+import org.review_board.idea.plugin.ReviewBoardPlugin;
 import org.vcs.bazaar.client.commandline.commands.Info;
 import org.vcs.bazaar.client.commandline.internal.CommandRunner;
 import org.vcs.bazaar.client.commandline.internal.ShellCommandRunner;
@@ -63,7 +64,16 @@ public class BazaarRepositoryFinder implements RepositoryFinder
         if ( baseDir == null )
             return null;
 
+        if( ReviewBoardPlugin.DEBUG )
+            System.out.println( "Getting URI of local branch/checkout from bzr." );
+
         String localUri = getLocalUri( baseDir.getPath() );
+
+        if( ReviewBoardPlugin.DEBUG )
+        {
+            System.out.println( "Retrieved URI of local branch/checkout from bzr: "
+                + localUri );
+        }
 
         if ( localUri == null )
             return null;
@@ -90,10 +100,21 @@ public class BazaarRepositoryFinder implements RepositoryFinder
             new BranchLocation( basePath ) );
         try
         {
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "Executing bzr xmlinfo command." );
+
             info.execute( runner );
+
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "Done executing bzr xmlinfo command." );
+
             final String output = info.getStandardOutput();
 
             Document doc = getDocument( output );
+
+            if( ReviewBoardPlugin.DEBUG )
+                System.out.println( "Parsing output of xmlinfo command." );
+
             XPath xpath = XPathFactory.newInstance().newXPath();
 
             String result = xpath.evaluate( "//checkout_of_branch", doc );
