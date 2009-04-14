@@ -40,7 +40,7 @@ public class PatchMakerFactory
         {
             return new IntelliJPatchMaker( project );
         }
-        else if ( vcs instanceof SvnVcs )
+        else if ( vcs.getClass().getSimpleName().equals( "SvnVcs" ) )
         {
             return new SvnPatchMaker( project );
         }
