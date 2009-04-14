@@ -34,9 +34,17 @@ public class RepositoryFinderFactory
             return null;
         
         final AbstractVcs vcs = VcsUtil.getVcsFor( project, baseDir );
-        if ( vcs instanceof SvnVcs )
+        if( vcs == null )
+        {
+            return null;
+        }
+        else if ( vcs instanceof SvnVcs )
         {
             return new SvnRepositoryFinder( project, (SvnVcs)vcs );
+        }
+        else if ( vcs.getClass().getSimpleName().equals( "BzrVcs" ) )
+        {
+            return new BazaarRepositoryFinder( project );
         }
         else
         {
