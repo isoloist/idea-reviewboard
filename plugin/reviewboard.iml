@@ -15,7 +15,9 @@
           <root url="jar://$MODULE_DIR$/lib/bzr-java-lib-r198.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/bzr-java-lib-r198-src.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

@@ -8,7 +8,6 @@ package org.review_board.idea.plugin.repofind;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +47,7 @@ public class SvnRepositoryFinder implements RepositoryFinder
         if ( localInfo == null )
             return null;
 
-        String localRelative = getRelativePath( localInfo.getURL().toString(),
+        String localRelative = RepoFindUtil.getRelativePath( localInfo.getURL().toString(),
             localInfo.getRepositoryRootURL().toString() );
         if ( localRelative == null )
             return null;
@@ -70,7 +69,7 @@ public class SvnRepositoryFinder implements RepositoryFinder
                     "Getting info for repository " + repository.getName() );
                 Map<String, String> info = client.getRepositoryInfo( repository.getId() );
                 String remoteUuid = info.get( "uuid" );
-                String remoteRelative = getRelativePath( info.get( "url" ),
+                String remoteRelative = RepoFindUtil.getRelativePath( info.get( "url" ),
                     info.get( "root_url" ) );
 
                 if( remoteRelative == null )
@@ -79,7 +78,7 @@ public class SvnRepositoryFinder implements RepositoryFinder
                 if( ! localUuid.equals( remoteUuid ) )
                     continue;
 
-                String relative = getRelativePath( localRelative, remoteRelative );
+                String relative = RepoFindUtil.getRelativePath( localRelative, remoteRelative );
                 if( relative == null )
                     continue;
 
@@ -99,45 +98,6 @@ public class SvnRepositoryFinder implements RepositoryFinder
     private Collection<Repository> filterSvnRepositories(
         final Collection<Repository> repositories )
     {
-        final Collection<Repository> svnRepositories = new ArrayList<Repository>();
-        for( Repository repository : repositories )
-        {
-            if( repository.getTool().equals( "Subversion" ) )
-            {
-                svnRepositories.add( repository );
-            }
-        }
-        return svnRepositories;
-    }
-
-    @Nullable
-    private static String getRelativePath( String url, String root )
-    {
-        url = url.replaceFirst( "/$", "" );
-        root = root.replaceFirst( "/*$", "" );
-
-        if( root.equals( "" ) )
-            return url;
-        
-        String[] urlPaths = url.split( "/" );
-        String[] rootPaths = root.split( "/" );
-
-        if( urlPaths.length < rootPaths.length )
-            return null;
-        
-        for( int i = 0; i < rootPaths.length; ++i )
-        {
-            if( ! rootPaths[i].equals( urlPaths[i] ) )
-                return null;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for( int i = rootPaths.length; i < urlPaths.length; ++i )
-        {
-            sb.append( urlPaths[i] );
-            if( i + 1 < urlPaths.length )
-                sb.append( "/" );
-        }
-        return sb.toString();
+        return RepoFindUtil.filterRepositories( repositories, "Subversion" );
     }
 }
