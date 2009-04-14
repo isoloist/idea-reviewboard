@@ -7,6 +7,7 @@ package org.review_board.idea.plugin.repofind;
 
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -20,18 +21,17 @@ import org.tmatesoft.svn.core.wc.SVNInfo;
 
 public class SvnRepositoryFinder implements RepositoryFinder
 {
+    @NotNull
     private final Project m_project;
 
     private final SvnVcs m_vcs;
 
-    public SvnRepositoryFinder( final Project project,
-        final SvnVcs vcs )
+    public SvnRepositoryFinder( @NotNull final Project project, final SvnVcs vcs )
     {
         m_project = project;
         m_vcs = vcs;
     }
 
-    @SuppressWarnings({"ConstantConditions"})
     @Nullable
     public FoundRepositoryInfo findRepository( final Collection<Repository> repositories,
         final ProgressIndicator indicator )
@@ -39,7 +39,12 @@ public class SvnRepositoryFinder implements RepositoryFinder
         indicator.setText2( "Getting info for local checkout" );
         if( indicator.isCanceled() )
             return null;
-        SVNInfo localInfo = m_vcs.getInfoWithCaching( m_project.getBaseDir() );
+
+        final VirtualFile baseDir = m_project.getBaseDir();
+        if( baseDir == null )
+            return null;
+
+        SVNInfo localInfo = m_vcs.getInfoWithCaching( baseDir );
         if ( localInfo == null )
             return null;
 

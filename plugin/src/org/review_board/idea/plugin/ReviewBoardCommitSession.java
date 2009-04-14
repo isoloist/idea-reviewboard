@@ -26,6 +26,8 @@ import org.review_board.client.json.Repository;
 import org.review_board.idea.plugin.form.ReviewForm;
 import org.review_board.idea.plugin.repofind.RepositoryFinder;
 import org.review_board.idea.plugin.repofind.RepositoryFinderTask;
+import org.review_board.idea.plugin.patchmaker.PatchMakerFactory;
+import org.review_board.idea.plugin.patchmaker.PatchMaker;
 
 class ReviewBoardCommitSession implements CommitSession
 {
@@ -139,7 +141,10 @@ class ReviewBoardCommitSession implements CommitSession
 
             final SetFieldsRequest.ReviewRequestData review =
                 m_form.createReviewRequestData();
-            review.setDiff( getPatch( changes ) );
+
+            final PatchMaker patchMaker =
+                PatchMakerFactory.getInstance().getPatchMaker( m_project );
+            review.setDiff( patchMaker.getPatch( changes ) );
 
             if( ReviewBoardPlugin.DEBUG )
                 System.out.println( "got patch of size " + review.getDiff().length() );
